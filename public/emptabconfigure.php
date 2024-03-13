@@ -1,0 +1,1 @@
+<?php defined('EMPTABCONFIGS') || define('EMPTABCONFIGS','employeedocs,emp_leaves,emp_holidays,emp_salary,empcommunicationdetails,emp_jobhistory,experience_details,education_details,trainingandcertification_details,emp_benifits');?>
