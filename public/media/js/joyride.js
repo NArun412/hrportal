@@ -576,28 +576,28 @@
 					$('#tour_tooltip').remove();
 				}
 				
-				function showControls(){
-					$('#tourcontrols').css('display','block');
-					$idsArr = ['activatetour','restarttour','separator-tour','endtour','canceltour','nextstep','prevstep'];
-					$.each($idsArr, function( index, value ) {
-						if(value == 'nextstep' || value == 'prevstep') $('#'+value).hide();
-						else $('#'+value).show();
-					});
-					$('#tourcontrols').animate({'right':'30px'},500);
-				}
+				// function showControls(){
+				// 	$('#tourcontrols').css('display','block');
+				// 	$idsArr = ['activatetour','restarttour','separator-tour','endtour','canceltour','nextstep','prevstep'];
+				// 	$.each($idsArr, function( index, value ) {
+				// 		if(value == 'nextstep' || value == 'prevstep') $('#'+value).hide();
+				// 		else $('#'+value).show();
+				// 	});
+				// 	$('#tourcontrols').animate({'right':'30px'},500);
+				// }
 				
-				function hideControls(){
-					$('#tourcontrols').css('display','none');
-				}
+				// function hideControls(){
+				// 	$('#tourcontrols').css('display','none');
+				// }
 				
-				function showOverlay(){
-					var $overlay	= '<div id="tour_overlay" class="overlay"></div>';
-					$('BODY').prepend($overlay);
-				}
+				// function showOverlay(){
+				// 	var $overlay	= '<div id="tour_overlay" class="overlay"></div>';
+				// 	$('BODY').prepend($overlay);
+				// }
 				
-				function hideOverlay(){
-					$('#tour_overlay').remove();
-				}
+				// function hideOverlay(){
+				// 	$('#tour_overlay').remove();
+				// }
 
 				/***
 				*** check if the user has logged in for the first time and enable the script
@@ -615,10 +615,10 @@
 					});
 				}
 				
-				$('#tourLink').click(function(){ 
-					setdisplaymenu('tour');
-					showOverlay();
-					showControls();					
-				});
+				// $('#tourLink').click(function(){ 
+				// 	setdisplaymenu('tour');
+				// 	showOverlay();
+				// 	showControls();					
+				// });
 									
 			});
