@@ -889,7 +889,7 @@ else
         { 							
             $organizationImg = new Zend_Session_Namespace('organizationinfo');
             $hideshowmainmenu = $organizationImg->hideshowmainmenu;
-            $orgLogoImg = MEDIA_PATH.'images/hrms-logo-new.png';
+            $orgLogoImg = MEDIA_PATH.'images/N_Mahathi_Logo.png';
             if(isset($organizationImg->orgimg) && !empty($organizationImg->orgimg))
             {
                 $orgLogoImg = DOMAIN.'public/uploads/organisation/'.$organizationImg->orgimg ; 
@@ -898,7 +898,7 @@ else
        
 ?>
             <a href="<?php echo $baseUrl;?>" style="text-decoration:none;" class="logo">
-                <img src="<?php echo $orgLogoImg; ?>" onerror="this.src='<?php echo MEDIA_PATH; ?>images/hrms-logo-new.png'">
+                <img src="<?php echo $orgLogoImg; ?>" onerror="this.src='<?php echo MEDIA_PATH; ?>images/N_Mahathi_Logo.png'">
             </a> <!-- added by sapplica -->
          
 				<?php sapp_Helper::createNew($loginUserId);?>	
