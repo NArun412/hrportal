@@ -6,6 +6,7 @@
 
 	$now = new DateTime();	
 	$today = $now->format('Y-m-d');
+	$last_day_of_current_month = strtotime(date("Y-m-d", strtotime($today)));
 	//$currentMonth = $now->format('Y-m');	
 	//echo " DOJ ".$this->empDoj;
 	$empDoj = $this->empDoj;
@@ -504,11 +505,14 @@
           			$tdClass ="";           			
           			if($curDate == $today) {          			
           				$currentDayClass = " current_date";
-          			} else if($curDate > $today) {          				
-						$inactiveDayClass = " inactive_td";	
+          			// } else if($curDate > $today) {          				
+					// 	// $inactiveDayClass = " inactive_td";	
           			}else if($curDate < $empDoj) {          				
 						$inactiveDayClass = " inactive_td";	
-          			}            			
+          			}    
+					else if($today > $last_day_of_current_month){
+						$inactiveDayClass = " inactive_td";
+					}        			
           		
           			if($dayName == $day)  {
           				
