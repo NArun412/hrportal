@@ -1,23 +1,5 @@
 <?php
-/********************************************************************************* 
- *  This file is part of Sentrifugo.
- *  Copyright (C) 2014 Sapplica
- *   
- *  Sentrifugo is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Sentrifugo is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with Sentrifugo.  If not, see <http://www.gnu.org/licenses/>.
- *
- *  Sentrifugo Support <support@sentrifugo.com>
- ********************************************************************************/
+ 
 include 'PHPMailer/PHPMailerAutoload.php';
 error_reporting(E_ALL | ~E_NOTICE | ~E_WARNING);
 ini_set("display_errors", 0);
@@ -175,7 +157,7 @@ public static function _checkMail($options = array()) {
     	$htmlcontentdata = '
 		<div style="width:100%;">
             <div style="background-color:#eeeeee; width:800px; margin:0 auto; position:relative;">
-            <div style="float:right;"><img src="'.$imgsource.'" onError="this.src='.MEDIA_PATH.'images/mail_pngs/hrms_logo.png" height="62" width="319" /></div>
+            <div style="float:right;"><img src="'.$imgsource.'" onError="this.src='.MEDIA_PATH.'images/mail_pngs/mahathi_logo.png" height="62" width="319" /></div>
             <div style="padding:20px 20px 50px 20px;">
                     <div>
                         <h1 style="font-family:Arial, Helvetica, sans-serif; font-size:18px; font-weight:bold; border-bottom:1px dashed #999; padding-bottom:15px;">'.$options['header'].'</h1>
@@ -187,7 +169,7 @@ public static function _checkMail($options = array()) {
                     
                     <div style="font-family:Arial, Helvetica, sans-serif; font-size:16px; font-weight:normal; line-height:30px;">
                         Regards,<br />
-                        <b>'.APPLICATION_NAME.'</b>
+                        <b>Mahathi HR Team</b>
                     </div>
             </div>
             </div>

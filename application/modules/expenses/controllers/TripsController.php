@@ -637,7 +637,7 @@ class Expenses_TripsController extends Zend_Controller_Action
 				$this->view->url_link=$link;
 				$text = $view->render('expensemailtemplates/expensestatus.phtml');
 				$options['subject'] = APPLICATION_NAME.': Notification';
-				$options['header'] = 'Greetings from Sentrifugo';
+				$options['header'] = 'Greetings from Mahathi Infotech';
 				$options['toEmail'] = $emil_id;
 				$options['toName'] = $to_name;
 				$options['message'] = $text;
@@ -777,7 +777,7 @@ class Expenses_TripsController extends Zend_Controller_Action
 				
 				$mpdf->list_indent_first_level = 0;
 				$mpdf->SetDisplayMode('fullpage');
-				$mpdf->pagenumPrefix = 'Generated using Sentrifugo'.str_repeat(" ",72);
+				$mpdf->pagenumPrefix = 'Generated using Mahathi Employee Portal'.str_repeat(" ",72);
 				$mpdf->pagenumSuffix = '';
 				$mpdf->nbpgPrefix = ' out of ';
 				$mpdf->nbpgSuffix = '';

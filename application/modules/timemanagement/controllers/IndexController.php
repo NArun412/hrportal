@@ -74,14 +74,15 @@ class Timemanagement_IndexController extends Zend_Controller_Action
 			
 		$empDoj = $usersModel->getEmployeeDoj($data->id);
 		
-		
+		$now = new DateTime();	
+		$today = strtotime($now->format('Y-m-d'));
 		//$this->view->empDoj=$empDoj['date_of_joining'];
 		
 		
 		$doj_date = strtotime($empDoj['date_of_joining']);
 		$created_date = strtotime($empDoj['createddate']);
 		
-		if($created_date < $doj_date)
+		if($created_date < $doj_date || $doj_date<$today)
 		{
 			$this->view->empDoj=$empDoj['date_of_joining'];
 			$dateEmpDoj = date('Y-m',strtotime($empDoj['date_of_joining']));
@@ -97,7 +98,6 @@ class Timemanagement_IndexController extends Zend_Controller_Action
 		//		$dt=date_create($datestring);
 		//		echo $dt->format('Y-m'); //2011-02
 		//	$YrMonths = array();
-		$now = new DateTime();
 		//		if($flag == 'next' || $flag == '') {
 		//			$YrMonths[3] = ($startYrMon != '')?$startYrMon: $now->format('Y-m');
 		//			for($i = 2,$j=0; $i >=0; $i--) {
@@ -408,7 +408,7 @@ class Timemanagement_IndexController extends Zend_Controller_Action
 		$storage = new Zend_Auth_Storage_Session();
 		$now = new DateTime();
 		$data = $storage->read();
-
+		$today = strtotime($now->format('Y-m-d'));
 		$selYrMon = $this->_getParam('selYrMon');
 		$week = ($this->_getParam('week') != '')?$this->_getParam('week'):1;
 		$calWeek = $this->_getParam('calWeek');
@@ -520,7 +520,7 @@ class Timemanagement_IndexController extends Zend_Controller_Action
 		$doj_date = strtotime($empDoj['date_of_joining']);
 		$created_date = strtotime($empDoj['createddate']);
 		
-		if($created_date < $doj_date)
+		if($created_date < $doj_date || $doj_date<$today)
 		{
 			$this->view->empDoj=$empDoj['date_of_joining'];
 			

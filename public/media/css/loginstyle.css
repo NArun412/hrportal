@@ -123,7 +123,7 @@ footer, .login-footer{ height:70px; width:100%; position:relative; margin-top:-7
 #login-page { margin:0 auto; width:1000px; position: relative; }
 
 header, .login-header { margin:13px 0 0 0; padding:0; float:left; width:1000px; }
-.logo { margin:0; padding:0;  background:url(../images/hrms-logo-new.png) no-repeat left top; width: 267px; height: 45px; float:left;  }
+.logo { margin:0; padding:0;  background:url(../images/N_Mahathi_Logo.png) no-repeat left top; width: 267px; height: 45px; float:left;  }
 
 nav { margin:4px 0 0 0; padding:0; float:right; /* min-width:588px; */ }
 nav ul { float:left;  }
@@ -252,6 +252,6 @@ header, .login-header { width: 960px; }
 .three h1{ text-align:center; margin:0px 10px 20px 10px; padding:0; font-size:24px; line-height:30px; font-family: 'latobold', sans-serif; text-transform:uppercase; font-weight:normal;}
 .bg_new{position:absolute; height:50%; width:100%; background: url(../images/login-bg-new.jpg); background-size:cover; background-repeat: no-repeat; background-position:bottom;}
 .logonew{ margin:0 auto; width:200px; height:80px; position:absolute; top:0px; width:100%;}
-.logonew_place{ margin:0 auto; width:238px; height:52px; background: url(../images/sentrifugo-login-logo.png); position:relative; top:20px; background-size:100%; }
+.logonew_place{ margin:0 auto; width:238px; height:52px; background: url(../images/N_Mahathi_Logo.png); position:relative; top:20px; background-size:100%; }
 .help_icon{ font-family: 'latoregular', sans-serif; text-decoration:none; padding:5px 10px 5px 30px; font-size:18px; position:absolute; right:20px; top:20px; font-weight:normal; z-index:1; background: url(../images/help_icon.png) #fff no-repeat 8px 7px;}
 .help_icon:hover{ background: url(../images/help_icon.png) #f38a28 no-repeat 8px 7px;}

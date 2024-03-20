@@ -1,4 +1,4 @@
-Sentrifugo - Open Source HRMS
+Sentrifugo - Mahathi Infotech
 =============================
 [sentrifugo.com](http://www.sentrifugo.com/)
 
@@ -33,7 +33,7 @@ in the same directory as this file for more details.
  
 Upgrade
 -------
-If you're updating an older version of Sentrifugo, please follow the instructions given in UPGRADE document in the same directory as this document
+If you're updating an older version of Mahathi please follow the instructions given in UPGRADE document in the same directory as this document
 
 Changelog
 ----------

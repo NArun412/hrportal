@@ -23,7 +23,7 @@
 	<div>
         <?php 
             $organizationImg = new Zend_Session_Namespace('organizationinfo');
-            $orgLogoImg = MEDIA_PATH.'images/hrms-logo-new.png';
+            $orgLogoImg = MEDIA_PATH.'images/N_Mahathi_Logo.png';
             if(isset($organizationImg->orgimg) && !empty($organizationImg->orgimg) && file_exists(BASE_PATH.'/uploads/organisation/'.$organizationImg->orgimg))
             {
                 $orgLogoImg = DOMAIN.'public/uploads/organisation/'.$organizationImg->orgimg ; 

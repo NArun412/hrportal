@@ -1,23 +1,5 @@
 <?php 
-/********************************************************************************* 
- *  This file is part of Sentrifugo.
- *  Copyright (C) 2014 Sapplica
- *   
- *  Sentrifugo is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Sentrifugo is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with Sentrifugo.  If not, see <http://www.gnu.org/licenses/>.
- *
- *  Sentrifugo Support <support@sentrifugo.com>
- ********************************************************************************/
+ 
 ?>
 
 <?php	
@@ -26,6 +8,7 @@
 
 	$now = new DateTime();	
 	$today = $now->format('Y-m-d');	
+	$last_day_of_current_month = strtotime(date("Y-m-t", strtotime($today)));
 	$empDoj = $this->empDoj;
 	$dateEmpDoj = date('Y-m',strtotime($empDoj));
 	$empDojDay = intval(date('d',strtotime($empDoj)));
@@ -1535,7 +1518,9 @@
 				<?php	} else {
 				 ?> 
 	       		 onfocus="activeDay('sun')"
-				 <?php } }else {?>
+				 <?php } } else if(strtotime($sunDate) <= $last_day_of_current_month) {
+
+				 }else {?>
 		       		disabled="disabled"
 		       		<?php }?> 
 		          type="text" class="time_enter_field <?php echo ($sunEntryFlag)?"time_enter_field_view":"";?>"  id="input_sun_<?php echo $weekData['project_task_id'];?>"
@@ -1550,7 +1535,9 @@
 				 disabled="disabled"
 				<?php } else {?>
 	      	    onfocus="activeDay('mon')"
-		      	<?php } }else {?>
+		      	<?php } }else if(strtotime($monDate) <= $last_day_of_current_month) {
+
+}else {?>
 		       disabled="disabled"
 		       	<?php }?> 
         	     type="text" class="time_enter_field <?php echo ($monEntryFlag)?"time_enter_field_view":"";?>"  id="input_mon_<?php echo $weekData['project_task_id'];?>" 
@@ -1565,7 +1552,9 @@
 				 disabled="disabled"
 					<?php } else {?>
 	       		onfocus="activeDay('tue')"
-				 <?php } }else {?>
+				 <?php } }else if(strtotime($tueDate) <= $last_day_of_current_month) {
+
+}else {?>
 		       		disabled="disabled"
 		       		<?php }?>  	 
 	       		type="text" class="time_enter_field <?php echo ($tueEntryFlag)?"time_enter_field_view":"";?>"  id="input_tue_<?php echo $weekData['project_task_id'];?>"
@@ -1580,7 +1569,9 @@
 					 disabled="disabled"
 					 <?php } else {?>
 	        	 onfocus="activeDay('wed')"
-		       	 <?php } }else {?>
+		       	 <?php } }else if(strtotime($wedDate) <= $last_day_of_current_month) {
+
+}else {?>
 		       		disabled="disabled"
 		       		<?php }?>  
 	        	 type="text" class="time_enter_field <?php echo ($wedEntryFlag)?"time_enter_field_view":"";?>"  id="input_wed_<?php echo $weekData['project_task_id'];?>" 
@@ -1595,7 +1586,9 @@
 				disabled="disabled"				 
 				 <?php } else {?>
 	       		 onfocus="activeDay('thu')"
-		       	 <?php } }else {?>
+		       	 <?php } }else if(strtotime($thuDate) <= $last_day_of_current_month) {
+
+}else {?>
 		       		disabled="disabled"
 		       		<?php }?>  
 		         type="text" class="time_enter_field <?php echo ($thuEntryFlag)?"time_enter_field_view":"";?>"  id="input_thu_<?php echo $weekData['project_task_id'];?>" 
@@ -1610,7 +1603,9 @@
 				disabled="disabled"
 					 <?php } else {?>
 	       		 onfocus="activeDay('fri')" 
-	       		 <?php } }else {?>
+	       		 <?php } }else if(strtotime($friDate) <= $last_day_of_current_month) {
+
+}else {?>
 		       		disabled="disabled"
 		       		<?php }?>  
 	       		 type="text" class="time_enter_field <?php echo ($friEntryFlag)?"time_enter_field_view":"";?>"  id="input_fri_<?php echo $weekData['project_task_id'];?>" 
@@ -1625,7 +1620,9 @@
 				 disabled="disabled"
 				 <?php } else {?>
 	        	onfocus="activeDay('sat')"
-				 <?php } } else {?>
+				 <?php } } else if(strtotime($satDate) <= $last_day_of_current_month) {
+
+}else {?>
 		       		disabled="disabled"
 		       		<?php }?>  
 		         type="text" class="time_enter_field <?php echo ($satEntryFlag)?"time_enter_field_view":"";?>"  id="input_sat_<?php echo $weekData['project_task_id'];?>"
