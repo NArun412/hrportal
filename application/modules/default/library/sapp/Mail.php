@@ -157,7 +157,7 @@ public static function _checkMail($options = array()) {
     	$htmlcontentdata = '
 		<div style="width:100%;">
             <div style="background-color:#eeeeee; width:800px; margin:0 auto; position:relative;">
-            <div style="float:right;"><img src="'.$imgsource.'" onError="this.src='.MEDIA_PATH.'images/mail_pngs/mahathi_logo.png" height="62" width="319" /></div>
+            <div style="float:right;"><img src="'.$imgsource.'" onError="this.src='.MEDIA_PATH.'images/mail_pngs/N_Mahathi_Logo.png" height="62" width="319" /></div>
             <div style="padding:20px 20px 50px 20px;">
                     <div>
                         <h1 style="font-family:Arial, Helvetica, sans-serif; font-size:18px; font-weight:bold; border-bottom:1px dashed #999; padding-bottom:15px;">'.$options['header'].'</h1>

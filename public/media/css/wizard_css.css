@@ -5,7 +5,7 @@ body.wizard_bg{ background:#eee url(../imags/wizard_bg.jpg) left bottom repeat; 
 .container{ width:1206px; margin:0 auto;}
 .clear{ clear:both;}
 .top_wrapper { float:left; margin:20px 0 30px 0; width:100%; }
-.logo{ background:url(../imags/logo_wizard.png) left bottom no-repeat; width:217px; height:46px; margin:0 70px 0px 0; cursor:pointer; float:left;}
+.logo{ background:url(../images/N_Mahathi_Logo.png) left bottom no-repeat; width:240px; height:46px; margin:0 70px 0px 0; cursor:pointer; float:left;}
 .sitedivclass { float:right;}
 .configlater { margin-right:1px; }
 .backtosite { background: #3498db; padding:5px 10px; float: right; }
@@ -122,7 +122,7 @@ li.inactive { cursor:pointer; }
 #formid.step_form, .step_form{ width:1030px; margin:0px 0 0 85px; float:left; /*height:600px;*/ }
 .form-ui{  border: medium none;  float: left; margin-bottom: 5px; margin-right: 38px;  min-width: 91px; width: 218px; position:relative; min-height:95px;}
 .form-ui-textarea{ min-height:100px;}
-.new-form-ui { /* padding:10px 0; */}
+/* .new-form-ui { padding:10px 0;} */
 .right_mar_0{ margin-right:0;}
 .form-ui label, .new-form-ui label{ color:#4b4b4b; font-size:14px; font-family: 'Roboto Regular', sans-serif,sans-serif; display:block; margin:0 0 2px;  padding-left: 0; width:auto;}
 .form-ui input[type="text"], .select2-container .select2-choice, .form-ui textarea{ height:33px; clear:both; width:199px; padding:0 8px; color:#4c4c4c;
