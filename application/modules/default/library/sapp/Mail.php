@@ -27,7 +27,7 @@ class sapp_Mail
 		if(!empty($orglogo))
 		   $imgsource = DOMAIN.'public/uploads/organisation/'.$orglogo ;
 		else
-		   $imgsource = MEDIA_PATH.'images/mail_pngs/mahathi_logo.png';
+		   $imgsource = MEDIA_PATH.'images/N_Mahathi_Logo';
 		
 		$header="";
 		$footer="";
