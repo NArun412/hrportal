@@ -18,7 +18,7 @@ button:focus,  input:focus { outline: none;}
 
 .logo-login { 
 	/* Added by sapplica */
-	background: url("../images/N_Mahathi_Logo") no-repeat scroll center center transparent;  margin: 0 auto; padding-top: 22px; height: 41px; width: 167px; }
+	background: url("../images/mahathi_logo.png") no-repeat scroll center center transparent;  margin: 0 auto; padding-top: 22px; height: 41px; width: 167px; }
 .box {
 	/* Commented by sapplica */
     /* margin: 0 auto;
@@ -192,7 +192,7 @@ font-size: 16px; text-transform:uppercase; /* text-shadow: 0 1px 0 #006391; */ f
 #outer { min-width: 700px; }
 #login-page { width: 700px; }
 header, .login-header { width: 700px; }
-.logo { background:url(../images/N_Mahathi_Logo) no-repeat left top; width: 227px; height: 33px;  }
+.logo { background:url(../images/mahathi_logo.png) no-repeat left top; width: 227px; height: 33px;  }
 .total-container { width:660px; min-height:460px;  }
 .screen { width:660px;  /*background:url(../images/screen-1024.jpg) no-repeat center;*/ height:460px; }
 nav ul li { margin: 0 1px; }

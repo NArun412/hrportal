@@ -163,10 +163,6 @@ function submitWeekTimesheet(week, calWeek, submitText) {
  // }	
 	
 }
-
-function month_submit(){
-	alert("Coming Soon");
-}
 function saveAndSubmitTimesheet(weekNo,calWeek,weekStart,weekEnd) {
 
     var eraseVisible = false;
@@ -206,13 +202,15 @@ function saveAndSubmitTimesheet(weekNo,calWeek,weekStart,weekEnd) {
               	sat_note = (sat_note != undefined)?sat_note:'';
               	week_note = (week_note != undefined)?week_note:'';
   
-    8          	var sunHrs = $('#mon_tot_hrs').text().trim());
-    8          	var tueHrs = ;
-    8          	var wedHrs = ;
-    8          	var thuHrs = ;
-    8          	var friHrs = ;
-    8          	var satHrs = ;
-  	8 >= 24 || tueHrs >= 24 || wedHrs >= 24 || thuHrs >= 24
+              	var sunHrs = parseInt($('#sun_tot_hrs').text().trim());
+              	var monHrs = parseInt($('#mon_tot_hrs').text().trim());
+              	var tueHrs = parseInt($('#tue_tot_hrs').text().trim());
+              	var wedHrs = parseInt($('#wed_tot_hrs').text().trim());
+              	var thuHrs = parseInt($('#thu_tot_hrs').text().trim());
+              	var friHrs = parseInt($('#fri_tot_hrs').text().trim());
+              	var satHrs = parseInt($('#sat_tot_hrs').text().trim());
+  	
+              	if(sunHrs >= 24 || monHrs >= 24 || tueHrs >= 24 || wedHrs >= 24 || thuHrs >= 24
               			|| friHrs >= 24 || satHrs >= 24) {
               		
               		 $("#error_message").show(); 
@@ -404,13 +402,15 @@ function saveTimesheet(weekNo,calWeek,weekStart,weekEnd) {
 //	console.log(" fri_note "+fri_note);
 //	console.log(" sat_note "+sat_note);
 //	console.log(" week_note "+week_note);
-	8var sunHrs = s').text().trim());
-	8var tueHrs = ;
-	8var wedHrs = ;
-	8var thuHrs = ;
-	8var friHrs = ;
-	8var satHrs = ;
-	8":");
+	var sunHrs = parseInt($('#sun_tot_hrs').text().trim());
+	var monHrs = parseInt($('#mon_tot_hrs').text().trim());
+	var tueHrs = parseInt($('#tue_tot_hrs').text().trim());
+	var wedHrs = parseInt($('#wed_tot_hrs').text().trim());
+	var thuHrs = parseInt($('#thu_tot_hrs').text().trim());
+	var friHrs = parseInt($('#fri_tot_hrs').text().trim());
+	var satHrs = parseInt($('#sat_tot_hrs').text().trim());
+	
+//	var sunTimeArray = sun_tot_hrs.split(":");
 //	var monTimeArray = mon_tot_hrs.split(":");
 //	var tueTimeArray = tue_tot_hrs.split(":");
 //	var wedTimeArray = wed_tot_hrs.split(":");
