@@ -425,6 +425,23 @@ public function getclientname($unitid)
 		// echo $projectsData; //exit;
 		return $projectsData;
 	}
+	public function getWeeklyTimesheetData($empId,$year,$month,$week,$project_ids="") { 
+		$select = $this->select()
+				  ->setIntegrityCheck(false)
+				  ->from(array('pte'=>'tm_project_task_employees'),array(
+				  	'pte.project_id','p.project_name','pte.project_task_id','t.task','sun_duration'=>'ifnull(et.sun_duration,0)','mon_duration'=>'ifnull(et.mon_duration,0)',
+				  	'tue_duration'=>'ifnull(et.tue_duration,0)','wed_duration'=>'ifnull(et.wed_duration,0)','thu_duration'=>'ifnull(et.thu_duration,0)','fri_duration'=>'ifnull(et.fri_duration,0)','sat_duration'=>'ifnull(et.sat_duration,0)','week_duration'=>'ifnull(et.week_duration,0)'))
+				  ->joinInner(array('pt'=>'tm_project_tasks'),'pt.id = pte.project_task_id',array())
+				  ->joinInner(array('p'=>'tm_projects'),'p.id = pt.project_id and p.id = pte.project_id',array())
+				  ->joinInner(array('t'=>'tm_tasks'),'t.id = pt.task_id',array())
+		          ->joinLeft(array('et'=>'tm_emp_timesheets'),'et.project_task_id = pte.project_task_id and et.ts_year='.$year.' and et.ts_month='.$month.' and et.ts_week = '.$week.' and et.emp_id= '.$empId,array());
+		  $select->where("pte.is_active=1 and pte.emp_id =".$empId); 
+		  if($project_ids != ""){
+		  	$select->where("p.id IN (".$project_ids.")");
+		  }
+		  $select->order('p.project_name');	  	         
+		return $this->fetchAll($select)->toArray();
+	}
 	
 	
 	

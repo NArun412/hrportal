@@ -760,7 +760,9 @@ class Timemanagement_IndexController extends Zend_Controller_Action
 
 	public function saveAction()
 	{
-		
+		$projectModel = new Default_Model_Projects();	
+		$storage = new Zend_Auth_Storage_Session();	
+		$sessionData = $storage->read();
 		
 		$usersModel = new Timemanagement_Model_Users();
 		$storage = new Zend_Auth_Storage_Session();
@@ -780,8 +782,7 @@ class Timemanagement_IndexController extends Zend_Controller_Action
 		$weekStartDate = $this->_getParam('weekStart');
 		$weekEndDate = $this->_getParam('weekEnd');
 		$selYrMon = $this->_getParam('selYrMon');
-		$tasksData = explode(',',$tasksHrsData);
-		//echo "tasksData ".sizeof($tasksData);
+		$tasksData = explode(',',$tasksHrsData);		
 		$callval = $this->getRequest()->getParam('call');
 		$sunNote = $this->_getParam('sun_note');
 		$monNote = $this->_getParam('mon_note');
@@ -792,11 +793,8 @@ class Timemanagement_IndexController extends Zend_Controller_Action
 		$satNote = $this->_getParam('sat_note');
 		$weekNote = $this->_getParam('week_note');
 
-
+		$project_data  = $projectModel->getWeeklyTimesheetData($sessionData->id,date("Y"),$week,$calWeek);
 		//$msgarray = array();
-		$storage = new Zend_Auth_Storage_Session();
-		$sessionData = $storage->read();
-
 		$selYrMonArray = explode('-', $selYrMon);
 		$myTsModel = new Timemanagement_Model_MyTimesheet();
 		$projTasksArray = array();
@@ -808,7 +806,6 @@ class Timemanagement_IndexController extends Zend_Controller_Action
 			foreach($tasksData as $data) {
 
 				$taskDataArray = explode('#',$data);
-				//echo " SUN ".$taskDataArray[2];
 				$sun_hrs =($taskDataArray[2] != null)? $taskDataArray[2]:0;
 				//echo " sun_hrs ".$sun_hrs;
 				$sun_tot = 0;
@@ -875,11 +872,12 @@ class Timemanagement_IndexController extends Zend_Controller_Action
 				//$week_tot = floor($week_tot_time / 60).':'.$week_tot_time % 60 ;
 				$week_tot = $wkHrsPart.':'.$wkMinsPart;
 
-				array_push($projTasksArray, $taskDataArray[0]);
-
-				$data = array('emp_id'=>$sessionData->id,
-			              'project_task_id'=>$taskDataArray[0],
-						  'project_id'=>$taskDataArray[1],
+				$prj_Id= ($taskDataArray[1] == 0 ?  (sizeof($project_data) > 0 ? $project_data[0]["project_id"]  : 0 ) : $taskDataArray[1]);
+				$prj_task_Id= ($taskDataArray[0] ==0 ? (sizeof($project_data) > 0 ? $project_data[0]["project_task_id"]  : 0 ): $taskDataArray[0]);
+				array_push($projTasksArray, $prj_task_Id);		
+				$data = array('emp_id'=>$sessionData->id,  //project_data[0]["project_id"]
+			              'project_task_id'=>$prj_task_Id,
+						  'project_id'=>$prj_Id,
 						  'ts_year'=>$selYrMonArray[0],
 						  'ts_month'=>$selYrMonArray[1],
 						  'ts_week'=>$week,
@@ -905,7 +903,6 @@ class Timemanagement_IndexController extends Zend_Controller_Action
 			  			  'created'=> Zend_Registry::get('currentdate') //gmdate("Y-m-d H:i:s")
 				);
 				$checkProjNull = $myTsModel->getProjNullRecordCountInTimeSheet($sessionData->id,$selYrMonArray[0],$selYrMonArray[1],$week);				
-				
 				if($checkProjNull != 0 ) {		
 					$where = " ts_year = ".$selYrMonArray[0]." and ts_month = ".$selYrMonArray[1]." and ts_week = ".
 						$week." and emp_id = ".$sessionData->id." and project_id is null";
@@ -914,19 +911,16 @@ class Timemanagement_IndexController extends Zend_Controller_Action
 					$myTsModel->updateTimesheetRecord($data,$where);
 				} else {					
 					$myTsModel->SaveOrUpdateTimesheet($data);
-					//print_r($data);
-					//exit;
-				}	
-				if($projectId != $taskDataArray[1]) {
-					$projectId = $taskDataArray[1];
-					array_push($projsArray,$taskDataArray[1]);
+				}				
+				if($projectId != $prj_Id) {
+					$projectId = $prj_Id;
+					array_push($projsArray,$prj_Id);
 
 				}
-			}
+			}		
 			foreach($projsArray as $proj) {
 
 				$projHrsData = $myTsModel->getWeekProjectHrs($sessionData->id,$proj,$selYrMonArray[0],$selYrMonArray[1],$week);
-				//	print_r($projHrsData); exit;
 
 				$statusData = array('emp_id'=>$sessionData->id,
 						  'project_id'=>$proj,
@@ -1020,7 +1014,7 @@ class Timemanagement_IndexController extends Zend_Controller_Action
 			  			  'created'=> Zend_Registry::get('currentdate')//gmdate("Y-m-d H:i:s")
 			);
 			$myTsModel->SaveOrUpdateTimesheetNotes($notesData);
-		}
+		}		
 
 		$empDeletedTasks = $myTsModel->empployeeDeletedTasks($sessionData->id, $selYrMonArray[0], $selYrMonArray[1], $week, $calWeek,$projTasksArray);
 		//print_r($empDeletedTasks);
