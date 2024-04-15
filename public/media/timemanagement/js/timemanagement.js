@@ -165,6 +165,9 @@ function submitWeekTimesheet(week, calWeek, submitText) {
 }
 
 function submitForMonth() {
+	var messageAlert = 'Are you sure you want to save and submit the timesheet for month : ' + new Date().toLocaleString('default', { month: 'long' }) + '? ';
+	jConfirm(messageAlert, "Save and Submit Timesheet", function(r) {
+		if (r == true) {
 	var curDate=new Date();
 	var lastDateOfMonth=new Date(curDate.getFullYear(), curDate.getMonth() + 1, 0)
 	var date = new Date(curDate.getFullYear(), curDate.getMonth(), 1);
@@ -195,6 +198,8 @@ function submitForMonth() {
 			}
 	}
 	location.reload();
+}
+});
 }
 function saveWeeklyTime(weekNo,calWeek,weekStart,weekEnd,pageFrom){
 			var selYrMon = $("#calSelYrMonth").val();
