@@ -1894,7 +1894,7 @@
 //	}   			 
 //	print_r($weekDaysStatus[0]);
 	$weekdays = array( 'sun','mon', 'tue', 'wed', 'thu', 'fri', 'sat');
-	$timeEntryCheck = 0; 
+	$timeEntryCheck = 0;
 	foreach($weekdays as $day) {
 		$dayStatus = (sizeof($weekDaysStatus) != 0)?$weekDaysStatus[0][$day.'_status']:"No Entry"; 		
 		if($dayStatus == 'No Entry' || $dayStatus == 'Yet to submit' || $dayStatus == 'Rejected' || $dayStatus == 'Enabled') {
