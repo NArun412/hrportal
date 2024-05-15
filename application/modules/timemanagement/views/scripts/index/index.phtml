@@ -338,7 +338,7 @@
     </div>
 </div>
       <?php 
-      	$selectedYrMon = explode('-', $currentMonth);
+      /* $selectedYrMon = explode('-', $currentMonth);
       	$selMonName = date('F', mktime(0, 0, 0, $selectedYrMon[1], 1,$selectedYrMon[0]));      	
       	$firstday = date("w", mktime(0, 0, 0, $selectedYrMon[1], 1, $selectedYrMon[0]));      	
         $lastday = date("t", mktime(0, 0, 0, $selectedYrMon[1], 1, $selectedYrMon[0])); 
@@ -360,11 +360,47 @@
 			if(strlen($mins.'') == 1) $mins = '0'.$mins;
 						
 	    	$totalHrs = $hrs.':'.$mins;
-        }
+        } */
     	//echo  $totalHrs;        
       ?>
-	  
-	  <?php 
+	  <!------------------New code Beginup------------------------>
+<?php 
+
+// Assuming $currentMonth is defined somewhere before this code snippet
+
+// Extract year and month from $currentMonth
+$selectedYrMon = explode('-', $currentMonth);
+$selMonName = date('F', mktime(0, 0, 0, $selectedYrMon[1], 1,$selectedYrMon[0]));      
+$firstday = date("w", mktime(0, 0, 0, $selectedYrMon[1], 1, $selectedYrMon[0]));      
+$lastday = date("t", mktime(0, 0, 0, $selectedYrMon[1], 1, $selectedYrMon[0])); 
+$noOfweeks = 1 + ceil(($lastday-7+$firstday)/7);
+
+$empMonthTSData  = $this->empMonthTSData;
+$totalMinutes = 0;
+
+// Calculate total worked minutes
+foreach ($empMonthTSData as $data) {
+    $duration = explode(':', $data['week_duration']);
+    $totalMinutes += $duration[0] * 60 + $duration[1];
+}
+
+// Calculate total working days in the month
+$totalWorkingDays = 0;
+for ($day = 1; $day <= $lastday; $day++) {
+    $dayOfWeek = date('w', mktime(0, 0, 0, $selectedYrMon[1], $day, $selectedYrMon[0]));
+    if ($dayOfWeek != 0 && $dayOfWeek != 6) { // Check if it's not Saturday (6) or Sunday (0)
+        $totalWorkingDays++; // Increment total working days
+    }
+}
+
+// Calculate total working hours excluding Saturdays and Sundays
+$totalHrs = $totalWorkingDays * 8; // Assuming 8 hours per working day
+
+echo "Total working hours=".$totalHrs;
+?>
+<!--------------------New time mgt code End-------------------->
+
+ <?php 
      	if(Zend_Registry::get( 'tm_role' ) !='Admin') {     
      ?>
      
@@ -391,7 +427,7 @@
             <?php 
    		  	if(Zend_Registry::get( 'tm_role' ) !='Admin') {     
  	    	?>
-           <div class="total_hrs_display total_hrs-50">Total Hours - <?php  echo $totalHrs;?></div>
+           <div class="total_hrs_display total_hrs-50">Total Hours- <?php  echo $totalHrs;?></div>
            <?php } ?>
            </th>
           </tr>
