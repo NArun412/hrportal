@@ -2123,19 +2123,21 @@ protected function _getAcl()
          * @param Integer $roleId   = role id
          * @param String $action    = action like add,edit,view ...
          * @return string  Returns Yes/No
-         */
+         */	
 	public static function _checkprivileges($objectId,$groupId='',$roleId,$action)
 	{
-            $menuID = $objectId;
-            $privilege_model = new Default_Model_Privileges();
-            $privilegesofObj = $privilege_model->getObjPrivileges($menuID,$groupId,$roleId);
-            if($action == 'add') return $privilegesofObj['addpermission'];
-            else if($action == 'edit') return $privilegesofObj['editpermission'];
-            else if($action == 'view') return $privilegesofObj['viewpermission'];
-            else if($action == 'delete') return $privilegesofObj['deletepermission'];
-            else if($action == 'uploadattachments') return $privilegesofObj['uploadattachments'];
-            else if($action == 'viewattachments') return $privilegesofObj['viewattachments'];
-            else return 'No';
+    $menuID = $objectId;
+    $privilege_model = new Default_Model_Privileges();
+    $privilegesofObj = $privilege_model->getObjPrivileges($menuID,$groupId,$roleId);
+    if (is_array($privilegesofObj)) {
+        if($action == 'add') return $privilegesofObj['addpermission'];
+        else if($action == 'edit') return $privilegesofObj['editpermission'];
+        else if($action == 'view') return $privilegesofObj['viewpermission'];
+        else if($action == 'delete') return $privilegesofObj['deletepermission'];
+        else if($action == 'uploadattachments') return $privilegesofObj['uploadattachments'];
+        else if($action == 'viewattachments') return $privilegesofObj['viewattachments'];
+    }
+	else return 'No';
 	}
         /**
          * This function is used to check privileges of a menu item of a particular login.
@@ -2789,6 +2791,7 @@ protected function _getAcl()
       172  => array('title'=>'Feedforward Employee Status','btnText'=>'View','emptyText'=>'No data','addText'=>''),
       174  => array('title'=>'My Team Appraisal','btnText'=>'View','emptyText'=>'No data','addText'=>''),
 	  182  => array('title'=>'Categories','btnText'=>'View','emptyText'=>'No data','addText'=>''),
+	  211  => array('title'=>'Time Management','btnText'=>'View','emptyText'=>'No data','addText'=>''),
       );
       //echo "<pre>";print_r($idsTitleArr[140]['empTabTitle']);exit;
 	return $idsTitleArr[$id][$con];
@@ -2938,7 +2941,7 @@ protected function _getAcl()
 	
 	public static function format4($id='',$i=0,$url='')
 	{
-		$widgetsModel = new Default_Model_Widgets();
+	    $widgetsModel = new Default_Model_Widgets();
 		$format4 = $widgetsModel->format4($id);															
 		$title = self::titleArr($id,'title');
 		$btnText = self::titleArr($id,'btnText');
@@ -2950,7 +2953,7 @@ protected function _getAcl()
 		 $class = '';
 		 $append_url1 = '';
 		 $append_url2 = '';
-	      if($id == 14 || $id == 34)
+	      if($id == 14 || $id == 34 || $id==211)
 		   {
 				$title1='Active';
 				$title2='Inactive';
@@ -2959,8 +2962,8 @@ protected function _getAcl()
 					$count = $format4['param1'];
 					$format4['param3'] = $count-(int)$format4['param2'];
 				}
-		   }
-		   
+		}
+		
 		  else if($id == 54)
 		   {
 				$title1='Approved';
@@ -2984,27 +2987,33 @@ protected function _getAcl()
 			
 		   		$htmlContent = '<div class="dashboard_wid_box '.$class.' colour_'.$i.' emp_total">
 						<h4 >
-						<div class="box_count_tol emp_total">'.$count .'</div>'.$title.'</h4>';
+						<div class="box_count_tol emp_total">'.($id==211 ? $_SESSION['totalHrs'] :  $count) .'</div>'.$title.'</h4>';
 		   	if(!empty($format4))
 			{
 				// Avoid hand symbol for Employee widget tabs
 				$href1 = !empty($append_url1) ? "href='$append_url1'" : "";
 				$href2 = !empty($append_url1) ? "href='$append_url2'" : "";
 				
-				$htmlContent .='<a '.$href1.' class ="cls_redirect"><div class="dashboard_wid_box_inner">'.$title1.'<span class="box_count">'.$format4['param2'] .'</span></div></a>
+				if($id != 211)
+				{
+					$htmlContent .='<a '.$href1.' class ="cls_redirect"><div class="dashboard_wid_box_inner">'.$title1.'<span class="box_count">'.$format4['param2'] .'</span></div></a>
 						<a '.$href2.' class ="cls_redirect"><div class="dashboard_wid_box_inner last-child">'.$title2.'<span class="box_count">'. $format4['param3'].'</span></div></a>';
+				}
 			}
 			else
 			{
 				$htmlContent .='<a href="'.$append_url1.'" class ="cls_redirect"><div class="dashboard_wid_box_inner">'.$title1.'<span class="box_count">0</span></div></a>
 						<a href="'.$append_url2.'" class ="cls_redirect"><div class="dashboard_wid_box_inner last-child">'.$title2.'<span class="box_count">0</span></div></a>';
 			}	
-				if(!empty($url)) 
+				if(!empty($url) && $id != 211) 
+				$htmlContent .='<a href="'.BASE_URL.$url.'"class="box_link view_link">'.$btnText.'</a>';
+				if(empty($url) && $id == 211)
+				$url="timemanagement";
 				$htmlContent .='<a href="'.BASE_URL.$url.'"class="box_link view_link">'.$btnText.'</a>';
 				$htmlContent .='</div>';
-		
-		return $htmlContent;
-	}
+
+				return $htmlContent;
+			}
 	
 	public static function format5($id='',$i=0,$url='')
 	{

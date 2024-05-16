@@ -163,25 +163,46 @@ function submitWeekTimesheet(week, calWeek, submitText) {
  // }	
 	
 }
-function saveAndSubmitTimesheet(weekNo,calWeek,weekStart,weekEnd) {
 
-    var eraseVisible = false;
-    $('span[class^="erase_icon"]').each(function(){   
-
-      var id = $(this).attr('id');
-      var isEraseVisible = $('#'+id).is(':visible');
-      if(isEraseVisible)
-          eraseVisible = true;
-  
-    });
-    if(eraseVisible) {
-
-  	  var selYrMon = $("#calSelYrMonth").val();
-      var messageAlert = 'Are you sure you want to save and submit the timesheet for week : ' + weekNo + '? ';
-      jConfirm(messageAlert, "Save and Submit Timesheet", function(r) {
-  
-        		if (r == true) {
-                var selYrMon = $("#calSelYrMonth").val();
+function submitForMonth() {
+	var messageAlert = 'Are you sure you want to save and submit the timesheet for month : ' + new Date().toLocaleString('default', { month: 'long' }) + '? ';
+	jConfirm(messageAlert, "Save and Submit Timesheet", function(r) {
+		if (r == true) {
+	var curDate=new Date();
+	var lastDateOfMonth=new Date(curDate.getFullYear(), curDate.getMonth() + 1, 0)
+	var date = new Date(curDate.getFullYear(), curDate.getMonth(), 1);
+	
+	var weekNo=1;
+	var weekStart="";
+	var weekEnd="";
+	var dayCount=0;
+	while (date.getMonth() === (curDate.getMonth())) {
+			var isBreak=false;
+			date.setDate(date.getDate() + 1);
+		
+			if(dayCount==0){
+				var curr = new Date(date); // get current date
+				var first = curr.getDate() - curr.getDay(); 
+				var firstday = new Date(curr.setDate(first)).toUTCString();
+				weekStart=$.datepicker.formatDate('MM dd, yy', new Date(firstday))
+			}
+			
+			dayCount=dayCount+1;
+		
+			while(!isBreak && (date.getDayName().toLowerCase()==="saturday"  || $.datepicker.formatDate('MM dd, yy', lastDateOfMonth) == $.datepicker.formatDate('MM dd, yy', date))){
+				weekEnd=$.datepicker.formatDate('MM dd, yy', date);
+				saveAndSubmitTimesheet(weekNo,new Date(date).getWeekOfYear(),weekStart,weekEnd,"monthView");
+				weekNo=weekNo+1;
+				dayCount=0;
+				isBreak=true;
+			}
+	}
+	location.reload();
+}
+});
+}
+function saveWeeklyTime(weekNo,calWeek,weekStart,weekEnd,pageFrom){
+			var selYrMon = $("#calSelYrMonth").val();
               	var url = base_url + module_name + "/index/save/format/json";	
               	var taskHrs = new Array();  
               	var sun_note = jQuery("textarea#sun_note_text").val();
@@ -201,20 +222,20 @@ function saveAndSubmitTimesheet(weekNo,calWeek,weekStart,weekEnd) {
               	fri_note = (fri_note != undefined)?fri_note:'';
               	sat_note = (sat_note != undefined)?sat_note:'';
               	week_note = (week_note != undefined)?week_note:'';
-  
-              	var sunHrs = parseInt($('#sun_tot_hrs').text().trim());
-              	var monHrs = parseInt($('#mon_tot_hrs').text().trim());
-              	var tueHrs = parseInt($('#tue_tot_hrs').text().trim());
-              	var wedHrs = parseInt($('#wed_tot_hrs').text().trim());
-              	var thuHrs = parseInt($('#thu_tot_hrs').text().trim());
-              	var friHrs = parseInt($('#fri_tot_hrs').text().trim());
-              	var satHrs = parseInt($('#sat_tot_hrs').text().trim());
+				  
+              	var sunHrs = pageFrom=='monthView' ? 8 : parseInt($('#sun_tot_hrs').text().trim());
+              	var monHrs =  pageFrom=='monthView' ? 8 : parseInt($('#mon_tot_hrs').text().trim());
+              	var tueHrs =  pageFrom=='monthView' ? 8 : parseInt($('#tue_tot_hrs').text().trim());
+              	var wedHrs =  pageFrom=='monthView' ? 8 : parseInt($('#wed_tot_hrs').text().trim());
+              	var thuHrs =  pageFrom=='monthView' ? 8 : parseInt($('#thu_tot_hrs').text().trim());
+              	var friHrs =  pageFrom=='monthView' ? 8 : parseInt($('#fri_tot_hrs').text().trim());
+              	var satHrs =  pageFrom=='monthView' ? 8 : parseInt($('#sat_tot_hrs').text().trim());
   	
               	if(sunHrs >= 24 || monHrs >= 24 || tueHrs >= 24 || wedHrs >= 24 || thuHrs >= 24
               			|| friHrs >= 24 || satHrs >= 24) {
               		
               		 $("#error_message").show(); 
-                   $('#error_message').empty();	    
+                  $('#error_message').empty();	    
               		 $("#error_message").html('<div id="messageData" class="ml-alert-1-error"><div style="display:block;"><span class="style-1-icon error"></span>Time per day cannot be more than 24 Hours</div></div>');
               		 setTimeout(function() {
               				$('#error_message').fadeOut('slow');
@@ -222,27 +243,45 @@ function saveAndSubmitTimesheet(weekNo,calWeek,weekStart,weekEnd) {
   		 
               	} else {
               	
-              		$('#weekview').find('tr.proj_task_col').each(function(){ 
-              		     
-              		      var id = $(this).attr('id');
-              		      var res = id.split('_');
-              		      var projId = res[3];
-              		      var projTaskId = res[4];
-              		     
-              		      var sunHrs = $('#input_sun_'+res[4]).val().trim();
-              		      var monHrs = $('#input_mon_'+res[4]).val().trim();
-              		      var tueHrs = $('#input_tue_'+res[4]).val().trim();
-              		      var wedHrs = $('#input_wed_'+res[4]).val().trim();
-              		      var thuHrs = $('#input_thu_'+res[4]).val().trim();
-              		      var friHrs = $('#input_fri_'+res[4]).val().trim();
-              		      var satHrs = $('#input_sat_'+res[4]).val().trim();              		            
-              	              
-              		      if(sunHrs != '' || monHrs != '' || tueHrs != '' || wedHrs != '' || thuHrs != '' || friHrs != '' || satHrs != '') {           
-              	         
-              		    	  taskHrs.push(projTaskId+"#"+projId+"#"+sunHrs+"#"+monHrs+"#"+tueHrs+"#"+wedHrs+"#"+thuHrs+"#"+friHrs+"#"+satHrs);
-              		      } 
-              			  
-              		});
+					if(pageFrom=='monthView'){
+						var projId = 0;
+						var projTaskId = 0;
+						
+						var sunHrs = "";
+						var monHrs = "08:00";
+						var tueHrs = "08:00";
+						var wedHrs = "08:00";
+						var thuHrs = "08:00";
+						var friHrs = "08:00";
+						var satHrs = "";              		            
+							
+						if(sunHrs != '' || monHrs != '' || tueHrs != '' || wedHrs != '' || thuHrs != '' || friHrs != '' || satHrs != '') {           
+						
+							taskHrs.push(projTaskId+"#"+projId+"#"+sunHrs+"#"+monHrs+"#"+tueHrs+"#"+wedHrs+"#"+thuHrs+"#"+friHrs+"#"+satHrs);
+						} 
+					}else{
+						$('#weekview').find('tr.proj_task_col').each(function(){ 
+							
+							var id = $(this).attr('id');
+							var res = id.split('_');
+							var projId = res[3];
+							var projTaskId = res[4];
+							
+							var sunHrs = $('#input_sun_'+res[4]).val().trim();
+							var monHrs = $('#input_mon_'+res[4]).val().trim();
+							var tueHrs = $('#input_tue_'+res[4]).val().trim();
+							var wedHrs = $('#input_wed_'+res[4]).val().trim();
+							var thuHrs = $('#input_thu_'+res[4]).val().trim();
+							var friHrs = $('#input_fri_'+res[4]).val().trim();
+							var satHrs = $('#input_sat_'+res[4]).val().trim();              		            
+								
+							if(sunHrs != '' || monHrs != '' || tueHrs != '' || wedHrs != '' || thuHrs != '' || friHrs != '' || satHrs != '') {           
+							
+								taskHrs.push(projTaskId+"#"+projId+"#"+sunHrs+"#"+monHrs+"#"+tueHrs+"#"+wedHrs+"#"+thuHrs+"#"+friHrs+"#"+satHrs);
+							} 
+							
+						});
+					}
             		if(taskHrs.length > 0) {
             			$.ajax({
             				url: url,
@@ -251,10 +290,10 @@ function saveAndSubmitTimesheet(weekNo,calWeek,weekStart,weekEnd) {
             						+'&sun_note='+sun_note+'&mon_note='+mon_note+'&tue_note='+tue_note
             						+'&wed_note='+wed_note+'&thu_note='+thu_note+'&fri_note='+fri_note+'&sat_note='+sat_note+'&week_note='+week_note,
             				type: 'POST',		
-            				success: function(response) {			 
+            				success: function(response) {		 
             					  if(response.status == 'success'){            					  	
             						  var flag = response.status; 
-            						   
+            						//    console.log("check response "+flag);
             						   	$.ajax({
                         			url: base_url + module_name + "/index/submit/format/json",
                         			data: 'selYrMon='+selYrMon+'&week='+weekNo+'&call=ajaxcall&calWeek='+calWeek,
@@ -269,7 +308,10 @@ function saveAndSubmitTimesheet(weekNo,calWeek,weekStart,weekEnd) {
                         					 $("#error_message").html('<div id="messageData" class="ml-alert-1-' + flag + '"><div style="display:block;"><span class="style-1-icon ' + flag + '"></span>Saved and Submitted successfully for week'+ weekNo +'.'+' </div></div>'); 
                         					 setTimeout(function() {
                         							$('#error_message').fadeIn('slow').fadeOut(function() {
-                        				         location.href = base_url + "/timeentry/"+selYrMon+"/"+weekNo+"/"+calWeek+"/time";			
+														if(pageFrom !='monthView'){
+															//location.href = base_url + "/timeentry/"+selYrMon+"/"+weekNo+"/"+calWeek+"/time";	
+														}
+                        				        		 		
                         							});
                         						}, 3000);
                                   //location.href = base_url + module_name + "/index/week?selYrMon="+selYrMon+"&week="+weekNo+"&calWeek="+calWeek+"&flag=time";
@@ -281,19 +323,42 @@ function saveAndSubmitTimesheet(weekNo,calWeek,weekStart,weekEnd) {
 								  else
 								  {
 									  $("#error_message").html('<div id="messageData" class="ml-alert-1-error"><div style="display:block;"><span class="style-1-icon error"></span>Date of joining should be greater than current date</div></div>');
-										setTimeout(function() {
-											$('#error_message').fadeIn('slow').fadeOut(function() {
-											location.href = base_url + "/timeentry/"+selYrMon+"/"+weekNo+"/"+calWeek+"/time";		
-												});
-										}, 3000);
+										// setTimeout(function() {
+										// 	$('#error_message').fadeIn('slow').fadeOut(function() {
+										// 	location.href = base_url + "/timeentry/"+selYrMon+"/"+weekNo+"/"+calWeek+"/time";		
+										// 		});
+										// }, 3000);
 								  }
             				  }
 							  
             		    });
             		}
-            	}	    		
+            	}	
+}
+
+function saveAndSubmitTimesheet(weekNo,calWeek,weekStart,weekEnd,pageFrom="") {
+	
+    var eraseVisible = false;
+    $('span[class^="erase_icon"]').each(function(){   
+
+      var id = $(this).attr('id');
+      var isEraseVisible = $('#'+id).is(':visible');
+      if(isEraseVisible)
+          eraseVisible = true;
+  
+    });
+    if(eraseVisible ) {
+
+  	  var selYrMon = $("#calSelYrMonth").val();
+      var messageAlert = 'Are you sure you want to save and submit the timesheet for week : ' + weekNo + '? ';
+      jConfirm(messageAlert, "Save and Submit Timesheet", function(r) {
+  
+        		if (r == true) {
+					saveWeeklyTime(weekNo,calWeek,weekStart,weekEnd,pageFrom)
   	     }
     });
+  }else if(pageFrom=='monthView'){
+	saveWeeklyTime(weekNo,calWeek,weekStart,weekEnd,pageFrom)
   } else {
   
      		var message = "Enter time to save and submit timesheet for this week.";     		
