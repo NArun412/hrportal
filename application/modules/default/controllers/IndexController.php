@@ -1,5 +1,5 @@
 <?php
- 
+
 
 
 class Default_IndexController extends Zend_Controller_Action
@@ -1551,7 +1551,7 @@ class Default_IndexController extends Zend_Controller_Action
 		//My details = 'format7';
 	
 
-		$menuIdsArr = array(57  =>  'format1',10  =>  'format5',11  =>  'format5',20  =>  'format5',21  =>  'format5',14  =>	'format4',23  =>  'format2',32=>'format7',34  =>  'format4',35  =>  'format5',41  =>  'format5',42  =>  'format5',45  =>  'format3',54  =>  'format4',55  =>  'format5',56  =>  'format4',61 => 'format3',65  =>  'format3',44  =>  'format6',43  =>  'format5',80  =>  'format5',86  =>  'format5',87  =>  'format5',88  =>  'format5',89  =>  'format5',90  =>  'format5',91  =>  'format5',92  =>  'format5',93  =>  'format5',100  =>  'format5',101  =>  'format5',102  =>  'format5',103  =>  'format5',107  =>  'format5',108  =>  'format5',110  =>  'format5',111  =>  'format5',114  =>  'format5',115  =>  'format5',116  =>  'format5',117  =>  'format5',118  =>  'format5',120  =>  'format5',121  =>  'format5',123  =>  'format5',124  =>  'format5',125  =>  'format5',126  =>  'format5',127  =>  'format5',128  =>  'format5',132  =>  'format5',136  =>  'format5',140 => 'format5',143 => 'format3',144  =>  'format5',145  =>  'format5',146  =>  'format5',148  =>  'format3',150  =>  'format5',151  =>  'format5',152  =>  'format5',154  =>  'format4',155  =>  'format5',165  =>  'format5',166  =>  'format5',62  =>  'format3',63  =>  'format3',64  =>  'format3',68  =>  'format3',69  =>  'format3',85  =>  'format3',131 => 'format5', 134  =>  'format3',135  =>  'format3',138  =>  'format3',139  =>  'format3',140  =>  'format5',142  =>  'format5',151  =>  'format5',154  =>  'format6',158  =>  'format5',159  =>  'format5',160  =>  '',161  =>  'format3',165 => 'format5',166 => 'format5',167  =>  'format6',168  =>  '',174  =>  'format5',169 => 'format3',170 => 'format3',172=>'format5',174=>'format5',182=>'format5');
+		$menuIdsArr = array(57  =>  'format1',10  =>  'format5',11  =>  'format5',20  =>  'format5',21  =>  'format5',14  =>	'format4',23  =>  'format2',32=>'format7',34  =>  'format4',211  =>  'formatnew4',35  =>  'format5',41  =>  'format5',42  =>  'format5',45  =>  'format3',54  =>  'format4',55  =>  'format5',56  =>  'format4',61 => 'format3',65  =>  'format3',44  =>  'format6',43  =>  'format5',80  =>  'format5',86  =>  'format5',87  =>  'format5',88  =>  'format5',89  =>  'format5',90  =>  'format5',91  =>  'format5',92  =>  'format5',93  =>  'format5',100  =>  'format5',101  =>  'format5',102  =>  'format5',103  =>  'format5',107  =>  'format5',108  =>  'format5',110  =>  'format5',111  =>  'format5',114  =>  'format5',115  =>  'format5',116  =>  'format5',117  =>  'format5',118  =>  'format5',120  =>  'format5',121  =>  'format5',123  =>  'format5',124  =>  'format5',125  =>  'format5',126  =>  'format5',127  =>  'format5',128  =>  'format5',132  =>  'format5',136  =>  'format5',140 => 'format5',143 => 'format3',144  =>  'format5',145  =>  'format5',146  =>  'format5',148  =>  'format3',150  =>  'format5',151  =>  'format5',152  =>  'format5',154  =>  'format4',155  =>  'format5',165  =>  'format5',166  =>  'format5',62  =>  'format3',63  =>  'format3',64  =>  'format3',68  =>  'format3',69  =>  'format3',85  =>  'format3',131 => 'format5', 134  =>  'format3',135  =>  'format3',138  =>  'format3',139  =>  'format3',140  =>  'format5',142  =>  'format5',151  =>  'format5',154  =>  'format6',158  =>  'format5',159  =>  'format5',160  =>  '',161  =>  'format3',165 => 'format5',166 => 'format5',167  =>  'format6',168  =>  '',174  =>  'format5',169 => 'format3',170 => 'format3',172=>'format5',174=>'format5',182=>'format5');
 	
 		$getMenuIds = $widgetsModel->getWidgets($loginUserId,$loginuserRole);
 		$htmlcontent = '';$tmpHtml1= "";$tmpHtml5= "";$tmpHtml2= "";$tmpHtml3= "";$tmpHtml4= "";$format='';
@@ -1567,7 +1567,7 @@ class Default_IndexController extends Zend_Controller_Action
 				$menuId =  $getMenuIdArr['id'];
 				$url    =  $getMenuIdArr['url'];
 				$format = (isset($menuIdsArr[$menuId])) ? $menuIdsArr[$menuId] : '';
-				
+
 				if ($menuId == 57)
 				{
 					$tmpHtml1= sapp_Global::format1($url);
@@ -1588,6 +1588,13 @@ class Default_IndexController extends Zend_Controller_Action
 				}
 				else if($format == 'format4')
 				{
+					$tmpHtml2.=sapp_Global::format4($menuId,$i,$url);
+					$i++;
+						
+				}
+				else if($format == 'formatnew4')
+				{
+
 					$tmpHtml2.=sapp_Global::format4($menuId,$i,$url);
 					$i++;
 						

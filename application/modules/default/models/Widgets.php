@@ -191,7 +191,7 @@ class Default_Model_Widgets extends Zend_Db_Table_Abstract
 		
 		if($id !='')
 		{
-			if($id == 14 || $id == 34 )
+			if($id == 14 || $id == 34 || $id==211)
 			{
 				
 				$qryStr = "SELECT COUNT(r.user_id) param1,COUNT(case when r.isactive = 1 then r.user_id end) param2

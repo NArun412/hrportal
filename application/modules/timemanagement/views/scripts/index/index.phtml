@@ -1,9 +1,5 @@
-<?php 
- 
-?>
-
 <?php
-
+session_start();
 	$now = new DateTime();	
 	$today = $now->format('Y-m-d');
 	$last_day_of_current_month = strtotime(date("Y-m-d", strtotime($today)));
@@ -397,6 +393,7 @@ for ($day = 1; $day <= $lastday; $day++) {
 $totalHrs = $totalWorkingDays * 8; // Assuming 8 hours per working day
 
 echo "Total working hours=".$totalHrs;
+$_SESSION['totalHrs'] = $totalHrs;
 ?>
 <!--------------------New time mgt code End-------------------->
 
