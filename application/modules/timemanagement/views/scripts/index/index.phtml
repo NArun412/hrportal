@@ -333,71 +333,81 @@ session_start();
         
     </div>
 </div>
-      <?php 
-      /* $selectedYrMon = explode('-', $currentMonth);
-      	$selMonName = date('F', mktime(0, 0, 0, $selectedYrMon[1], 1,$selectedYrMon[0]));      	
-      	$firstday = date("w", mktime(0, 0, 0, $selectedYrMon[1], 1, $selectedYrMon[0]));      	
-        $lastday = date("t", mktime(0, 0, 0, $selectedYrMon[1], 1, $selectedYrMon[0])); 
-		$noOfweeks = 1 + ceil(($lastday-7+$firstday)/7);
-		
-		$empMonthTSData  = $this->empMonthTSData;
-		$total = "";
-		$totalHrs = "00:00";
-        foreach($empMonthTSData as $data) {
-        	//echo $data['week_duration'];
-          	 $duration = explode(':',$data['week_duration']);
-        	 $total += $duration[0] * 60;
-        	 $total += $duration[1];
-        }  
-        if($total != "") {      
-	        $hrs = floor($total / 60);
-	    	$mins = $total % 60;
-	    	if(strlen($hrs.'') == 1) $hrs = '0'.$hrs;
-			if(strlen($mins.'') == 1) $mins = '0'.$mins;
-						
-	    	$totalHrs = $hrs.':'.$mins;
-        } */
-    	//echo  $totalHrs;        
-      ?>
-	  <!------------------New code Beginup------------------------>
 <?php 
-
-// Assuming $currentMonth is defined somewhere before this code snippet
-
-// Extract year and month from $currentMonth
 $selectedYrMon = explode('-', $currentMonth);
 $selMonName = date('F', mktime(0, 0, 0, $selectedYrMon[1], 1,$selectedYrMon[0]));      
-$firstday = date("w", mktime(0, 0, 0, $selectedYrMon[1], 1, $selectedYrMon[0]));      
-$lastday = date("t", mktime(0, 0, 0, $selectedYrMon[1], 1, $selectedYrMon[0])); 
+$firstday = date("w", mktime(0, 0, 0, $selectedYrMon[1], 1, $selectedYrMon[0]));        
+$lastday = date("t", mktime(0, 0, 0, $selectedYrMon[1], 1, $selectedYrMon[0]));
 $noOfweeks = 1 + ceil(($lastday-7+$firstday)/7);
 
 $empMonthTSData  = $this->empMonthTSData;
-$totalMinutes = 0;
-
-// Calculate total worked minutes
-foreach ($empMonthTSData as $data) {
-    $duration = explode(':', $data['week_duration']);
-    $totalMinutes += $duration[0] * 60 + $duration[1];
+$total = "";
+$totalHrs = "00:00";
+foreach($empMonthTSData as $data) {
+	//echo $data['week_duration'];
+	 $duration = explode(':',$data['week_duration']);
+     $total += $duration[0] * 60;
+	 $total += $duration[1];
+}  
+if($total != "") {      
+	$hrs = floor($total / 60);
+	$mins = $total % 60;
+	if(strlen($hrs.'') == 1) $hrs = '0'.$hrs;
+	if(strlen($mins.'') == 1) $mins = '0'.$mins;
+			   
+	$totalHrs = $hrs.':'.$mins;
 }
+  
+    $curdate = $curDate; // Assuming $curDate is defined
+	$dateParts = explode("-", $curdate);
+	$month = $dateParts[1];
 
-// Calculate total working days in the month
-$totalWorkingDays = 0;
-for ($day = 1; $day <= $lastday; $day++) {
-    $dayOfWeek = date('w', mktime(0, 0, 0, $selectedYrMon[1], $day, $selectedYrMon[0]));
-    if ($dayOfWeek != 0 && $dayOfWeek != 6) { // Check if it's not Saturday (6) or Sunday (0)
-        $totalWorkingDays++; // Increment total working days
+	// Assuming $currentMonth is defined
+	$currentMonth; // Assuming $currentMonth is defined
+	$selectedYrMon = explode('-', $currentMonth);
+	$currentmonth_check = $currentMonth;
+	$dateParts_check = explode("-", $currentmonth_check);
+	$month_check = $dateParts_check[1];
+
+    $year = $selectedYrMon[0];
+    $month = $selectedYrMon[1]; //05
+
+    // Get the number of days in the current month
+    $daysInMonth = cal_days_in_month(CAL_GREGORIAN, $month, $year);
+
+    // Initialize counters for Saturday and Sunday
+    $saturdayCount = 0;
+    $sundayCount = 0;
+
+    // Iterate through each day of the month and count Saturdays and Sundays
+    for ($day = 1; $day <= $daysInMonth; $day++) {
+        // Get the day of the week for the current day (0 for Sunday, 6 for Saturday)
+        $dayOfWeek = date('w', mktime(0, 0, 0, $month, $day, $year));
+
+        // Increment the corresponding counter
+        if ($dayOfWeek == 0) { // Sunday
+            $sundayCount++;
+        } elseif ($dayOfWeek == 6) { // Saturday
+            $saturdayCount++;
+        }
     }
-}
 
-// Calculate total working hours excluding Saturdays and Sundays
-$totalHrs = $totalWorkingDays * 8; // Assuming 8 hours per working day
+    $except_totalhrs = $saturdayCount + $sundayCount;
+    $except_totalhrstotal = $except_totalhrs * 8;
 
-echo "Total working hours=".$totalHrs;
-$_SESSION['totalHrs'] = $totalHrs;
+   $totalHrs = $totalHrs - $except_totalhrstotal;
+	if($totalHrs > 0)
+	{
+    $_SESSION['totalHrs_final'] = $totalHrs;
+	}
+	else{
+		$_SESSION['totalHrs_final'] = "00.0";
+
+	}
+
 ?>
-<!--------------------New time mgt code End-------------------->
 
- <?php 
+<?php 
      	if(Zend_Registry::get( 'tm_role' ) !='Admin') {     
      ?>
      
@@ -424,7 +434,7 @@ $_SESSION['totalHrs'] = $totalHrs;
             <?php 
    		  	if(Zend_Registry::get( 'tm_role' ) !='Admin') {     
  	    	?>
-           <div class="total_hrs_display total_hrs-50">Total Hours- <?php  echo $totalHrs;?></div>
+           <div class="total_hrs_display total_hrs-50">Total Hours- <?php echo $_SESSION['totalHrs_final'];?></div>
            <?php } ?>
            </th>
           </tr>

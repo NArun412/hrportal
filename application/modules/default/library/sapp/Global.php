@@ -2986,10 +2986,10 @@ protected function _getAcl()
 		   }
 			
 		   		$htmlContent = '<div class="dashboard_wid_box '.$class.' colour_'.$i.' emp_total">
-						<h4 >
-						<div class="box_count_tol emp_total">'.($id==211 ? $_SESSION['totalHrs'] :  $count) .'</div>'.$title.'</h4>';
+						<h4 > 
+						<div class="box_count_tol emp_total">'.($id==211 ? $_SESSION['totalHrs_final'] :  $count) .'</div>'.$title.'</h4>';
 		   	if(!empty($format4))
-			{
+			{		
 				// Avoid hand symbol for Employee widget tabs
 				$href1 = !empty($append_url1) ? "href='$append_url1'" : "";
 				$href2 = !empty($append_url1) ? "href='$append_url2'" : "";
