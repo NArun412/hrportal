@@ -4,7 +4,7 @@
 #popup_container {
 	/*font-family: 'OpenSansRegular'; font-size:13px; text-shadow:1px 1px #ffffff;  */
 	width: 320px; /* Dialog will be no smaller than this */
-	min-width: 320px !important;
+	min-width: 520px !important;
 	max-width: 600px; /* Dialog will wrap after this width */
 	/*background: #FFF;
 	border: solid 5px #999;

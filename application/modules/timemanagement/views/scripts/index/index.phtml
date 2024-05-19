@@ -346,8 +346,8 @@ $totalHrs = "00:00";
 foreach($empMonthTSData as $data) {
 	//echo $data['week_duration'];
 	 $duration = explode(':',$data['week_duration']);
-     $total += $duration[0] * 60;
-	 $total += $duration[1];
+	 $total += $duration[0] * 60;
+	 $total += $duration[1];     // 2400 => 240 / 8 =30
 }  
 if($total != "") {      
 	$hrs = floor($total / 60);
@@ -394,6 +394,14 @@ if($total != "") {
 
     $except_totalhrs = $saturdayCount + $sundayCount;
     $except_totalhrstotal = $except_totalhrs * 8;
+    
+	if($lastday == '31')
+	{
+		$totalHrs = $totalHrs+8;
+	}
+	else{
+		$totalHrs = $totalHrs;
+	}
 
    $totalHrs = $totalHrs - $except_totalhrstotal;
 	if($totalHrs > 0)
@@ -673,12 +681,23 @@ if($total != "") {
           		 			if($status == 'rejected'){
           		 				$rejectNoteClass = 'rejected_note';
           		 				$rejNoteAttr = 'data-powertip="'.$rejectNote.'"';
+
+								  
           		 			}
-          		 			
-          		 	?>
-          		 	<div class="sheet_status <?php echo $statusClasses[$status];?> <?php echo  $rejectNoteClass?>"  <?php echo $rejNoteAttr;?>  leaveData = "leave_<?php echo $leaveId;?>"><?php echo ($statusText[$status] == "Blocked")?"Not Submitted":$statusText[$status];?></div></td>
+					?>
+					
+					<?php
+					if($statusText[$status] == "Rejected")
+					{
+						$total_rejectedhrs +=$duration;
+					}
+					$rejected_hrs=$total_rejectedhrs;
+
+				   $_SESSION['rejected_hrs']=$rejected_hrs;
+                   ?>
+          		 	<div class="sheet_status <?php echo $statusClasses[$status];?> <?php echo $rejectNoteClass?>"  <?php echo $rejNoteAttr;?>  leaveData = "leave_<?php echo $leaveId;?>"><?php echo ($statusText[$status] == "Blocked")?"Not Submitted":$statusText[$status];?></div></td>
           		<?php 
-          		 		} else {
+          		 		} else {							
           		?>
           				<div class="sheet_status <?php echo $statusClasses[$status];?>" leaveData = "leave_<?php echo $leaveId;?>"></div></td>
           		<?php  	

@@ -3523,7 +3523,13 @@ border-radius: 5px;}
 .upcmg_bday_list li{color:#333333; font-size:13px; font-family: 'Roboto Light';  font-weight:normal;  padding-bottom:5px; padding-top:8px; border-bottom:1px dashed #929292; text-align:right;}
 .upcmg_bday_list li label{ float:left;}
 .upcmg_bday_list li span{ display: inline-block;}
-.company_announc{ /*border-radius: 4px 4px 4px 4px; -moz-border-radius: 4px 4px 4px 4px; -webkit-border-radius: 4px 4px 4px 4px; background:#fff;*/ margin-top:20px; padding:15px 15px 30px; text-align:left; border:1px solid #e9eef3;}
+.company_announc{ 
+    /*border-radius: 4px 4px 4px 4px; -moz-border-radius: 4px 4px 4px 4px; 
+    -webkit-border-radius: 4px 4px 4px 4px; background:#fff;*/
+     margin-top:20px; padding:15px 15px 30px; 
+     text-align:left; border:1px solid #e9eef3;
+     height:100vh;
+    }
 h4.dashbord_title{ font-size:14px; color:#4b4b4b; font-family: 'Roboto Medium'; font-weight:normal; text-align:left;}
 .company_announc ul{ list-style:none; margin-top:8px;}
 .company_announc ul li{ margin-bottom:10px; padding:20px 10px; cursor:pointer; position:relative;}

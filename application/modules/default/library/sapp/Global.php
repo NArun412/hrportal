@@ -2704,7 +2704,7 @@ protected function _getAcl()
       21  => array('title'=>'Manage External Users','btnText'=>'View All','emptyText'=>'No external users','addText'=>'Add'),
       14  => array('title'=>'Employees','btnText'=>'View All','emptyText'=>'','addText'=>'Add')	,
       23  => array('title'=>'Employee/Candidate Screening','btnText'=>'View All','emptyText'=>'','addText'=>'Add')  ,
-      32  => array('title'=>'My Details','btnText'=>'View','emptyText'=>'','addText'=>'Add')  ,
+      32  => array('title'=>'My Details','btnText'=>'View Details','emptyText'=>'','addText'=>'Add')  ,
       34  => array('title'=>'My Team','btnText'=>'View My Team','emptyText'=>'','addText'=>'Add')  ,
       41  => array('title'=>'Manage Holiday Group','btnText'=>'View All','emptyText'=>'Not configured yet','addText'=>'')  ,
       42  => array('title'=>'Manage Holidays','btnText'=>'View All','emptyText'=>'Not configured yet','addText'=>'')  ,
@@ -2791,7 +2791,7 @@ protected function _getAcl()
       172  => array('title'=>'Feedforward Employee Status','btnText'=>'View','emptyText'=>'No data','addText'=>''),
       174  => array('title'=>'My Team Appraisal','btnText'=>'View','emptyText'=>'No data','addText'=>''),
 	  182  => array('title'=>'Categories','btnText'=>'View','emptyText'=>'No data','addText'=>''),
-	  211  => array('title'=>'Time Management','btnText'=>'View','emptyText'=>'No data','addText'=>''),
+	  211  => array('title'=>'Time Management','btnText'=>'View My Time','emptyText'=>'No data','addText'=>''),
       );
       //echo "<pre>";print_r($idsTitleArr[140]['empTabTitle']);exit;
 	return $idsTitleArr[$id][$con];
@@ -2957,6 +2957,10 @@ protected function _getAcl()
 		   {
 				$title1='Active';
 				$title2='Inactive';
+
+				$title3='Approved';
+				$title4='Unapproved';
+
 				if(!empty($format4))
 				{
 					$count = $format4['param1'];
@@ -2987,7 +2991,7 @@ protected function _getAcl()
 			
 		   		$htmlContent = '<div class="dashboard_wid_box '.$class.' colour_'.$i.' emp_total">
 						<h4 > 
-						<div class="box_count_tol emp_total">'.($id==211 ? $_SESSION['totalHrs_final'] :  $count) .'</div>'.$title.'</h4>';
+						<div class="box_count_tol emp_total">'.($id==211 ? $_SESSION['totalHrs_final'] - $_SESSION['rejected_hrs'] :  $count) .'</div>'.$title.'</h4>';
 		   	if(!empty($format4))
 			{		
 				// Avoid hand symbol for Employee widget tabs
@@ -2999,6 +3003,22 @@ protected function _getAcl()
 					$htmlContent .='<a '.$href1.' class ="cls_redirect"><div class="dashboard_wid_box_inner">'.$title1.'<span class="box_count">'.$format4['param2'] .'</span></div></a>
 						<a '.$href2.' class ="cls_redirect"><div class="dashboard_wid_box_inner last-child">'.$title2.'<span class="box_count">'. $format4['param3'].'</span></div></a>';
 				}
+
+				if($id == 211) // Dashboard Time Mgt Approved count 
+				{
+					$check_approved_count=$_SESSION['totalHrs_final']  - $_SESSION['rejected_hrs'];
+
+					if($_SESSION['rejected_hrs'] != '')
+					{
+						$final_rejectedhrs=$_SESSION['rejected_hrs'];
+					}
+					else
+					{
+						$final_rejectedhrs=0;
+					}
+					$htmlContent .='<a '.$href1.' class ="cls_redirect"><div class="dashboard_wid_box_inner">'.$title3.'<span class="box_count">'.$check_approved_count.'</span></div></a>
+						<a '.$href2.' class ="cls_redirect"><div class="dashboard_wid_box_inner last-child">'.$title4.'<span class="box_count">'.$final_rejectedhrs.'</span></div></a>';
+				}
 			}
 			else
 			{
@@ -3006,10 +3026,10 @@ protected function _getAcl()
 						<a href="'.$append_url2.'" class ="cls_redirect"><div class="dashboard_wid_box_inner last-child">'.$title2.'<span class="box_count">0</span></div></a>';
 			}	
 				if(!empty($url) && $id != 211) 
-				$htmlContent .='<a href="'.BASE_URL.$url.'"class="box_link view_link">'.$btnText.'</a>';
+				$htmlContent .='<a href="'.BASE_URL.$url.'"class="box_link view_link">'.($id!=211 ? $btnText :  "").'</a>';
 				if(empty($url) && $id == 211)
 				$url="timemanagement";
-				$htmlContent .='<a href="'.BASE_URL.$url.'"class="box_link view_link">'.$btnText.'</a>';
+				$htmlContent .='<a href="'.BASE_URL.$url.'"class="box_link view_link">'.($id==211 ? $btnText :  "").'</a>';
 				$htmlContent .='</div>';
 
 				return $htmlContent;
