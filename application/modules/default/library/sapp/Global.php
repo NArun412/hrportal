@@ -2988,10 +2988,9 @@ protected function _getAcl()
 				if(!empty($format4))
 				$count = $format4['param1'] + $format4['param2'] + $format4['param3'];
 		   }
-			
-		   		$htmlContent = '<div class="dashboard_wid_box '.$class.' colour_'.$i.' emp_total">
-						<h4 > 
-						<div class="box_count_tol emp_total">'.($id==211 ? $_SESSION['totalHrs_final'] - $_SESSION['rejected_hrs'] :  $count) .'</div>'.$title.'</h4>';
+   $htmlContent = '<div class="dashboard_wid_box '.$class.' colour_'.$i.' emp_total">
+						<h4 >
+						<div class="box_count_tol emp_total">'.($id==211 ? $_SESSION['totalHrs_final'] :  $count) .'</div>'.$title.'</h4>';
 		   	if(!empty($format4))
 			{		
 				// Avoid hand symbol for Employee widget tabs
@@ -3006,8 +3005,15 @@ protected function _getAcl()
 
 				if($id == 211) // Dashboard Time Mgt Approved count 
 				{
-					$check_approved_count=$_SESSION['totalHrs_final']  - $_SESSION['rejected_hrs'];
+					$check_approved_count=$_SESSION['total_approvedhrs'];
 
+					if($check_approved_count !='')
+					{
+						$check_approved_count;
+					}
+					else{
+						$check_approved_count=0;
+					}
 					if($_SESSION['rejected_hrs'] != '')
 					{
 						$final_rejectedhrs=$_SESSION['rejected_hrs'];
