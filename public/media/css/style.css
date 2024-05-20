@@ -3500,8 +3500,8 @@ margin-bottom: 10px;
 .click_view_link_class_pd{position: absolute; top: 5px; color: #2980b9; font-family: 'Roboto Regular', sans-serif; text-decoration:none;}
 
 .dashboard_birthday{ }
-.right_dashboard{float:right; width:20%;}
-.left_dashboard{ float:left; width:78%;}
+.right_dashboard{float:left; width:40%;}
+.left_dashboard{ float:left; width:60%;}
 .to_daybirth{ background:#b8a5d3; /*-webkit-border-top-left-radius: 4px; -webkit-border-top-right-radius: 4px; -moz-border-radius-topleft: 4px; -moz-border-radius-topright: 4px; border-top-left-radius: 4px; border-top-right-radius: 4px;*/ min-height:130px; padding-bottom: 32px; text-align:center;}
 .no_birthday{ background:#fff7ee; color:#d8740e;   min-height: 25px;    padding-top: 13px;    padding-bottom: 9px;  border: 1px solid #d3d3d3; text-align:center;}
 .no_announ{ background:#fff7ee; color:#e2974a;  text-align:center; border:none;}
@@ -3530,7 +3530,7 @@ border-radius: 5px;}
      text-align:left; border:1px solid #e9eef3;
      height:100vh;
     }
-h4.dashbord_title{ font-size:14px; color:#4b4b4b; font-family: 'Roboto Medium'; font-weight:normal; text-align:left;}
+h4.dashbord_title{ font-size:16px; color:#4b4b4b; font-family: 'Roboto Medium'; font-weight:normal; text-align:left;}
 .company_announc ul{ list-style:none; margin-top:8px;}
 .company_announc ul li{ margin-bottom:10px; padding:20px 10px; cursor:pointer; position:relative;}
 .multi_files{ background: url(../images/multi-attach.png) no-repeat right center; height:25px; display: block; position: absolute; top: 3px; right: 3px; padding-right: 23px; text-align:right;}
@@ -3539,7 +3539,7 @@ h4.dashbord_title{ font-size:14px; color:#4b4b4b; font-family: 'Roboto Medium'; 
 .company_announc ul li:nth-child(2){ background:#f0fbff;}
 .company_announc ul li:nth-child(3){ background:#f2fbf8;}
 .company_announc ul li:nth-child(4){ background:#fff5f5;}
-.company_announc ul li .annou_txt{ color:#333333; font-family: 'Roboto Light'; font-size:12px; word-wrap: break-word;}
+.company_announc ul li .annou_txt{ color:#333333; font-family: 'Roboto Light'; font-size:14px; word-wrap: break-word;}
 .company_announc ul li .annou_date{color:#a5a6a5; font-family: 'Roboto Regular'; font-size:12px;}
 .view_more_annou, .announcements_link a{ color:#208bbd; font-size:13px; font-family: 'Roboto Regular'; float:right; text-decoration:none;}
 .announcements_link a{ float:none;}

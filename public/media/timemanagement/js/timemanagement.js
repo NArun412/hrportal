@@ -165,7 +165,7 @@ function submitWeekTimesheet(week, calWeek, submitText) {
 }
 
 function submitForMonth() {
-	var messageAlert = 'Standard eight hours per day are included for the whole month. Are you sure you want to submit for .: ' + new Date().toLocaleString('default', { month: 'long' }) + '? ';
+	var messageAlert = 'Standard eight hours per day are included for the whole month of '+ new Date().toLocaleString('default', { month: 'long' }) +'. Are you sure you want to submit?';
 	jConfirm(messageAlert, "Save and Submit Timesheet", function(r) {
 		if (r == true) {
 	var curDate=new Date();

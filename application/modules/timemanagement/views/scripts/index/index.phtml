@@ -694,6 +694,16 @@ if($total != "") {
 					$rejected_hrs=$total_rejectedhrs;
 
 				   $_SESSION['rejected_hrs']=$rejected_hrs;
+
+				   if($statusText[$status] == "Approved")
+					{
+						$total_approvedhrs +=$duration;
+					}
+					$total_approvedhrs=$total_approvedhrs;
+
+				   $_SESSION['total_approvedhrs']=$total_approvedhrs;
+
+				   
                    ?>
           		 	<div class="sheet_status <?php echo $statusClasses[$status];?> <?php echo $rejectNoteClass?>"  <?php echo $rejNoteAttr;?>  leaveData = "leave_<?php echo $leaveId;?>"><?php echo ($statusText[$status] == "Blocked")?"Not Submitted":$statusText[$status];?></div></td>
           		<?php 
