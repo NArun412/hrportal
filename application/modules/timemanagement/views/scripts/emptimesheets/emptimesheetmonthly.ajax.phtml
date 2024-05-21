@@ -250,7 +250,7 @@ if(strlen($empMinsPart.'') == 1) $empMinsPart = '0'.$empMinsPart;?>
           			
           			if($dayCounter > $lastday ) break;	
           			$dayName = date('D',mktime(0, 0, 0, $selectedYrMon[1], $dayCounter,$selectedYrMon[0]));  
-          			$cDate = $selYrMon.'-'.$dayCounter;          			
+          			$cDate = $selYrMon;		
           			$currentDayClass = ""; 
           			$inactiveDayClass = "";
           			$blockedDayClass = "";  
