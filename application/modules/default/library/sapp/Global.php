@@ -2938,14 +2938,255 @@ protected function _getAcl()
 		return $htmlContent .='</div>';
 	}
 	
-	
+    public static function calcTotalHrs($empMonthTSData,$currentMonth)
+    {
+       $selectedYrMon = explode('-', $currentMonth);
+		$lastday = date("t", mktime(0, 0, 0, $selectedYrMon[1], 1, $selectedYrMon[0])); 
+	    $total = "";
+	   $totalHrs = "00:00";
+	   foreach($empMonthTSData as $data) {
+        $duration = explode(':',$data['week_duration']);
+		$total += $duration[0] * 60;
+		$total += $duration[1];
+		}  
+		if($total != "") {      
+		  $hrs = floor($total / 60);
+		  $mins = $total % 60;
+		  if(strlen($hrs.'') == 1) $hrs = '0'.$hrs;
+		  if(strlen($mins.'') == 1) $mins = '0'.$mins;
+			$totalHrs = $hrs.':'.$mins;
+	  } 
+	  $curdate = $curDate; // Assuming $curDate is defined
+	  $dateParts = explode("-", $curdate);
+	  $month = $dateParts[1];
+  	  $currentMonth; 
+	  $selectedYrMon = explode('-', $currentMonth);
+	  $currentmonth_check = $currentMonth;
+	  $dateParts_check = explode("-", $currentmonth_check);
+	  $month_check = $dateParts_check[1];
+      $year = $selectedYrMon[0];
+	  $month = $selectedYrMon[1]; //05
+      $daysInMonth = cal_days_in_month(CAL_GREGORIAN, $month, $year);
+      $saturdayCount = 0;
+	  $sundayCount = 0;
+      for ($day = 1; $day <= $daysInMonth; $day++) {
+		  $dayOfWeek = date('w', mktime(0, 0, 0, $month, $day, $year));
+  			if ($dayOfWeek == 0) { // Sunday
+			  $sundayCount++;
+		  } elseif ($dayOfWeek == 6) { // Saturday
+			  $saturdayCount++;
+		  }
+	  }
+      $except_totalhrs = $saturdayCount + $sundayCount;
+	  $except_totalhrstotal = $except_totalhrs * 8;
+	  if($lastday == '31')
+	  {
+	  $totalHrs = $totalHrs+8;
+	  }
+	  else{
+	  $totalHrs = $totalHrs;
+	  }
+	  $totalHrs = $totalHrs - $except_totalhrstotal; // 184 hrs
+      if($totalHrs > 0)
+	  {  
+		$totalHrs=$totalHrs;
+	  }
+	  else{
+		  $totalHrs = 0;
+	  }
+		return $totalHrs;
+	}
+public static function totalapprovedhrs($total_approvedhrs, $rejected_hrs,$status)
+  {
+	 $final_approvedhrs = $total_approvedhrs;
+	 $final_rejectedhrs = $rejected_hrs;
+	 return $status;
+	}
 	public static function format4($id='',$i=0,$url='')
 	{
-	    $widgetsModel = new Default_Model_Widgets();
+        $now = new DateTime();	
+		$today = $now->format('Y-m-d');
+		$last_day_of_current_month = strtotime(date("Y-m-d", strtotime($today)));
+		$currentYear = $now->format('Y');
+		$currentMonth = $now->format('m');
+		$storage = new Zend_Auth_Storage_Session();
+		$data = $storage->read();
+		$empTSModel = new Timemanagement_Model_MyTimesheet();
+		$empMonthTSData = $empTSModel->getMonthTimesheetData($data->id, $currentYear,$currentMonth);
+        $totalHrs = self::calcTotalHrs($empMonthTSData, $currentYear."-".$currentMonth);
+		$widgetsModel = new Default_Model_Widgets();
 		$format4 = $widgetsModel->format4($id);															
 		$title = self::titleArr($id,'title');
 		$btnText = self::titleArr($id,'btnText');
 		$count = 0;
+		$totalHrs = self::calcTotalHrs($empMonthTSData, $currentYear."-".$currentMonth);
+		/*******************Approved Code Begin up************ */
+		$selectedYrMon = explode('-', $currentMonth);
+        $selMonName = date('F', mktime(0, 0, 0, $selectedYrMon[1], 1,$selectedYrMon[0]));      	
+      	$firstday = date("w", mktime(0, 0, 0, $selectedYrMon[1], 1, $selectedYrMon[0]));      	
+        $lastday = date("t", mktime(0, 0, 0, $selectedYrMon[1], 1, $selectedYrMon[0])); 
+		$noOfweeks = 1 + ceil(($lastday-7+$firstday)/7);
+          for($i = 1; $i <= $noOfweeks; $i++) {
+					$weekData = ""; 
+				     foreach($empMonthTSData as $eachWeekData) {
+						if( $i == $eachWeekData['ts_week'])
+							$weekData = $eachWeekData;	
+					}
+				?>
+			<tr>
+				<?php
+				$weekdays = array( 'Sun','Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat');
+				$statusClasses = array('no_entry'=>'no_entry','saved'=>'yet_to_submit','approved'=>'approved',
+					'submitted'=>'for_approval','enabled'=>'enabled','rejected'=>'rejected','blocked'=>'blocked');
+				$statusText = array('no_entry'=>'No Entry','saved'=>'Yet to submit','approved'=>'Approved',
+					'submitted'=>'For Approval','enabled'=>'Enabled','rejected'=>'Rejected','blocked'=>'Blocked');
+					foreach($weekdays as $day) {
+						if($dayCounter > $lastday ) break;	
+						$dayName = date('D',mktime(0, 0, 0, $selectedYrMon[1], $dayCounter,$selectedYrMon[0]));  
+						$cDate = $selYrMon.'-'.$dayCounter;
+						$currentDayClass = ""; 
+						$inactiveDayClass = ""; 
+						$blockedDayClass = ""; 
+						$rejectNoteClass = ""; 
+						$holName = "";
+						$holLeaveClass = "";
+						$curDate = date('Y-m-d',strtotime($cDate));
+						$calWeek = strftime('%U',strtotime($cDate));
+						$tdClass ="";           			
+						if($curDate == $today) {          			
+							$currentDayClass = " current_date";
+						}else if($curDate < $empDoj) {          				
+						  $inactiveDayClass = " inactive_td";	
+						}    
+					  else if($today > $last_day_of_current_month){
+						  $inactiveDayClass = " inactive_td";
+					  }        			
+					   if($dayName == $day)  {
+							$duration = ($weekData != "")?$weekData[strtolower($dayName).'_duration']:"00:00";
+							$status = ($weekData != "")?$weekData[strtolower($dayName).'_status']:'no_entry'; 
+                            $rejectNote = ($weekData != "")?$weekData[strtolower($dayName).'_reject_note']:"";            				
+							$calDate = $selectedYrMon[0].'-'.$selectedYrMon[1].'-'.$dayCounter;
+							$holiday = (in_array($dayCounter,$holidayDates))?"H":""; 
+							if((in_array($dayCounter,$holidayDates))){
+							  $holKey = array_search($dayCounter, $holidayDates);
+								$holName = $holidayNames[$holKey];
+							}
+							$keys = array_keys($weekdays, $day);   
+							if(!empty($weekendsArray))       				
+								$weekendClass = (in_array($keys[0],$weekendsArray))?" weekend_td":"";
+							else 
+								$weekendClass ="";	
+                           if($status == 'blocked') $blockedDayClass = "blocked_date";
+							if($holName != '') $holLeaveClass = "one_hol";
+						   $tdClass .= $inactiveDayClass." ".$weekendClass." ".$currentDayClass." ".$blockedDayClass;
+							$tdClass = ($dayCounter == 1)? $tdClass .= " td_first":$tdClass;          					          				
+							if($dayCounter == $lastday) $tdClass .= " td_last";
+						   $freezedClass = "";          				
+							if($cronStartDay  != "" && $statusClasses[$status] == 'no_entry') {
+								if($dayCounter >=$cronStartDay && $dayCounter <=$cronEndDay) {          					
+								  $freezedClass = "freezed";								
+								}
+							} 
+							if($selYrMon == $dateEmpDoj) {          				
+								if($dayCounter < $empDojDay) {          					
+									$freezedClass = "freezed";          					
+								}
+							} 
+							$tdClass .= " ".$freezedClass;
+							if(trim($tdClass) != "")
+								$tdClass = "class='".trim($tdClass)."'";
+							else 
+								$tdClass = "";      
+                        ?>
+					<?php 
+						if(strpos($tdClass, 'inactive_td')) {
+					?>
+				    <td  id="id_day_<?php echo  $dayCounter; ?>" <?php echo $tdClass; ?> >
+					<?php } else {           
+							   if(Zend_Registry::get( 'tm_role' ) !='Admin') {  			
+						?>          			
+						 <td  style="cursor: pointer; cursor: hand;" onclick="getWeekData('',<?php  echo $i;?>,<?php echo $calWeek;?>,<?php echo $dayCounter;?>);" id="id_day_<?php echo  $dayCounter; ?>" <?php echo $tdClass; ?> >
+						 <?php }else {?>
+						<td <?php echo $tdClass; ?> >
+						 <?php } 
+							}
+						 ?>
+						<?php  
+						 $leave = "";
+						$leaveType = $leaveId = ""; 
+						foreach($leavesArray as $k=>$v) {
+						if(preg_match("/\b$dayCounter\b/i", $v)) {					       
+							   $keyLeaveData = explode('-',$v);	
+							  if($keyLeaveData[0] == $dayCounter){							 
+								   $leaveType = $keyLeaveData[1];
+								   $leaveId = $keyLeaveData[2];
+							   }
+						  }
+					  }
+						 if($leaveType == "L") {          		 		
+							 $leave = "L";
+							 $holLeaveClass = 'one_hol';
+						 } else if($leaveType == "HD"){          		 		
+							  $leave = "HD"; 
+							  $holLeaveClass = 'two_hol';
+						 }else if($leaveType == "P"){          		 		
+							  $leave = "P"; 
+							  $holLeaveClass = 'one_hol';
+							  $tooltip = 'Approval Pending for leave';
+						 }else if($leaveType == "PHD"){          		 		
+							  $leave = "P"; 
+							  $holLeaveClass = 'one_hol';
+							  $tooltip = 'Approval Pending for half day leave';
+						 }
+						 if($holiday == 'H')
+						  $tooltip = $holName; 
+					  else if($leave == 'L')
+						  $tooltip = 'Full day Leave';
+					  else if($leave == 'HD')
+						  $tooltip = 'Half day Leave';
+						   if($holiday != "" || $leave != "" ) {          		 	
+							 ?>
+							 <div class="hol_leave  <?php echo $holLeaveClass; ?>" title="<?php echo $tooltip;?>"><?php echo $holiday.$leave; ?> </div>
+						 <?php  }
+  
+							 if(!strpos($tdClass, "inactive_td")) {	
+								 
+								 $rejNoteAttr  = "";
+								 if($status == 'rejected'){
+									 $rejectNoteClass = 'rejected_note';
+									 $rejNoteAttr = 'data-powertip="'.$rejectNote.'"';
+									}
+					  ?>
+				<?php
+				   if($statusText[$status] == "Rejected")
+					  {
+						 $total_rejectedhrs +=$duration;
+					  }
+					  $rejected_hrs =$total_rejectedhrs;
+                     if($statusText[$status] == "Approved")
+					  {
+					    $total_approvedhrs +=$duration;
+					  } ?>
+					</td>
+					<?php 
+							 } else {							
+					?>
+							</td>
+					<?php  	
+							 }			
+							$dayCounter ++;
+						} else {
+				?>   
+						 <td class="no_date"></td>         		
+				<?php          	
+						}          	          		
+					} // for loop end
+				?>
+						</tr>
+				<?php
+				}  // end
+			
+		/*******************Approved Code End up************ */
 		if(!empty($url))
 		{
 		 $url = substr($url,1);
@@ -2988,9 +3229,9 @@ protected function _getAcl()
 				if(!empty($format4))
 				$count = $format4['param1'] + $format4['param2'] + $format4['param3'];
 		   }
-   $htmlContent = '<div class="dashboard_wid_box '.$class.' colour_'.$i.' emp_total">
+           $htmlContent = '<div class="dashboard_wid_box '.$class.' colour_'.$i.' emp_total">
 						<h4 >
-						<div class="box_count_tol emp_total">'.($id==211 ? $_SESSION['totalHrs_final'] :  $count) .'</div>'.$title.'</h4>';
+						<div class="box_count_tol emp_total">'.($id==211 ? $totalHrs :  $count) .'</div>'.$title.'</h4>';
 		   	if(!empty($format4))
 			{		
 				// Avoid hand symbol for Employee widget tabs
@@ -3005,7 +3246,7 @@ protected function _getAcl()
 
 				if($id == 211) // Dashboard Time Mgt Approved count 
 				{
-					$check_approved_count=$_SESSION['total_approvedhrs'];
+				$check_approved_count=$total_approvedhrs;
 
 					if($check_approved_count !='')
 					{
@@ -3014,9 +3255,9 @@ protected function _getAcl()
 					else{
 						$check_approved_count=0;
 					}
-					if($_SESSION['rejected_hrs'] != '')
+					if($total_rejectedhrs != '')
 					{
-						$final_rejectedhrs=$_SESSION['rejected_hrs'];
+						$final_rejectedhrs=$total_rejectedhrs;
 					}
 					else
 					{

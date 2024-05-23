@@ -1,5 +1,5 @@
 <?php
-session_start();
+	include_once("application/modules/default/library/sapp/Global.php");
 	$now = new DateTime();	
 	$today = $now->format('Y-m-d');
 	$last_day_of_current_month = strtotime(date("Y-m-d", strtotime($today)));
@@ -249,7 +249,7 @@ session_start();
               $prev_str_split=preg_split('/@@@/',$this->prev_str);
             ?>
 			<!--style="cursor: pointer;width: 90%;" onclick="javascript:window.location.href='<?php //echo $this->baseUrl("index.php/timemanagement/index/index");?>'"-->
-			<div class="ml-alert-1-error" id="close_div" style="width: 90%;"><div class="style-1-icon error"></div><?php echo $prev_str_split[0];?> has not been submitted.</div>
+			<div class="ml-alert-1-error" id="close_div" style="width: 90%;"><div class="style-1-icon error"></div><?php echo $prev_str_split[0];?> have not been submitted.</div>
 		
             <?php }?>
     
@@ -334,86 +334,15 @@ session_start();
     </div>
 </div>
 <?php 
-$selectedYrMon = explode('-', $currentMonth);
-$selMonName = date('F', mktime(0, 0, 0, $selectedYrMon[1], 1,$selectedYrMon[0]));      
-$firstday = date("w", mktime(0, 0, 0, $selectedYrMon[1], 1, $selectedYrMon[0]));        
-$lastday = date("t", mktime(0, 0, 0, $selectedYrMon[1], 1, $selectedYrMon[0]));
-$noOfweeks = 1 + ceil(($lastday-7+$firstday)/7);
-
-$empMonthTSData  = $this->empMonthTSData;
-$total = "";
-$totalHrs = "00:00";
-foreach($empMonthTSData as $data) {
-	//echo $data['week_duration'];
-	 $duration = explode(':',$data['week_duration']);
-	 $total += $duration[0] * 60;
-	 $total += $duration[1];     // 2400 => 240 / 8 =30
-}  
-if($total != "") {      
-	$hrs = floor($total / 60);
-	$mins = $total % 60;
-	if(strlen($hrs.'') == 1) $hrs = '0'.$hrs;
-	if(strlen($mins.'') == 1) $mins = '0'.$mins;
-			   
-	$totalHrs = $hrs.':'.$mins;
-}
-  
-    $curdate = $curDate; // Assuming $curDate is defined
-	$dateParts = explode("-", $curdate);
-	$month = $dateParts[1];
-
-	// Assuming $currentMonth is defined
-	$currentMonth; // Assuming $currentMonth is defined
-	$selectedYrMon = explode('-', $currentMonth);
-	$currentmonth_check = $currentMonth;
-	$dateParts_check = explode("-", $currentmonth_check);
-	$month_check = $dateParts_check[1];
-
-    $year = $selectedYrMon[0];
-    $month = $selectedYrMon[1]; //05
-
-    // Get the number of days in the current month
-    $daysInMonth = cal_days_in_month(CAL_GREGORIAN, $month, $year);
-
-    // Initialize counters for Saturday and Sunday
-    $saturdayCount = 0;
-    $sundayCount = 0;
-
-    // Iterate through each day of the month and count Saturdays and Sundays
-    for ($day = 1; $day <= $daysInMonth; $day++) {
-        // Get the day of the week for the current day (0 for Sunday, 6 for Saturday)
-        $dayOfWeek = date('w', mktime(0, 0, 0, $month, $day, $year));
-
-        // Increment the corresponding counter
-        if ($dayOfWeek == 0) { // Sunday
-            $sundayCount++;
-        } elseif ($dayOfWeek == 6) { // Saturday
-            $saturdayCount++;
-        }
-    }
-
-    $except_totalhrs = $saturdayCount + $sundayCount;
-    $except_totalhrstotal = $except_totalhrs * 8;
-    
-	if($lastday == '31')
-	{
-		$totalHrs = $totalHrs+8;
-	}
-	else{
-		$totalHrs = $totalHrs;
-	}
-
-   $totalHrs = $totalHrs - $except_totalhrstotal;
-	if($totalHrs > 0)
-	{
-    $_SESSION['totalHrs_final'] = $totalHrs;
-	}
-	else{
-		$_SESSION['totalHrs_final'] = 0;
-
-	}
-
+        $selectedYrMon = explode('-', $currentMonth);
+        $selMonName = date('F', mktime(0, 0, 0, $selectedYrMon[1], 1,$selectedYrMon[0]));      	
+      	$firstday = date("w", mktime(0, 0, 0, $selectedYrMon[1], 1, $selectedYrMon[0]));      	
+        $lastday = date("t", mktime(0, 0, 0, $selectedYrMon[1], 1, $selectedYrMon[0])); 
+		$noOfweeks = 1 + ceil(($lastday-7+$firstday)/7);
+		$empMonthTSData  = $this->empMonthTSData;
+		$totalHrs = sapp_Global::calcTotalHrs($empMonthTSData, $currentMonth); // To send Global file pass param
 ?>
+
 
 <?php 
      	if(Zend_Registry::get( 'tm_role' ) !='Admin') {     
@@ -442,7 +371,7 @@ if($total != "") {
             <?php 
    		  	if(Zend_Registry::get( 'tm_role' ) !='Admin') {     
  	    	?>
-           <div class="total_hrs_display total_hrs-50">Total Hours- <?php echo $_SESSION['totalHrs_final'];?></div>
+           <div class="total_hrs_display total_hrs-50">Total Hours Planned- <?php echo $totalHrs;?></div>
            <?php } ?>
            </th>
           </tr>
@@ -686,22 +615,19 @@ if($total != "") {
           		 			}
 					?>
 					
-					<?php
+			<?php	
 					if($statusText[$status] == "Rejected")
 					{
 						$total_rejectedhrs +=$duration;
 					}
-					$rejected_hrs=$total_rejectedhrs;
-
-				   $_SESSION['rejected_hrs']=$rejected_hrs;
-
-				   if($statusText[$status] == "Approved")
+					$rejected_hrs=$total_rejectedhrs; 
+					if($statusText[$status] == "Approved")
 					{
 						$total_approvedhrs +=$duration;
 					}
-					$total_approvedhrs=$total_approvedhrs;
 
-				   $_SESSION['total_approvedhrs']=$total_approvedhrs; // Total Approved Hours  ?>
+					//$total_approvedhrs=sapp_Global::totalapprovedhrs($total_approvedhrs,$rejected_hrs,$status);
+					?>
           		 	<div class="sheet_status <?php echo $statusClasses[$status];?> <?php echo $rejectNoteClass?>"  <?php echo $rejNoteAttr;?>  leaveData = "leave_<?php echo $leaveId;?>"><?php echo ($statusText[$status] == "Blocked")?"Not Submitted":$statusText[$status];?></div></td>
           		<?php 
           		 		} else {							
