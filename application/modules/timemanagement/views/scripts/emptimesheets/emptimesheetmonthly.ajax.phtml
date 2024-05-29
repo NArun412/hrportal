@@ -20,6 +20,7 @@
  ********************************************************************************/
 ?>
 <?php
+ include_once("application/modules/default/library/sapp/Global.php");
 	$now = new DateTime();
 	$today = $now->format('Y-m-d');
 	$empDoj = $this->empDoj;
@@ -42,6 +43,16 @@
 	$emp_id=$this->user_id;
 	$manager_id=$this->manager_id;
 	$emplistflag = $this->emplistflag;
+   ?>
+<?php
+    $now = new DateTime();
+	$storage = new Zend_Auth_Storage_Session();
+	$empTSModel = new Timemanagement_Model_MyTimesheet();
+	$data = $storage->read();
+	$currentYear = $now->format('Y');
+	$currentMonth = $now->format('m');
+    $monthInfo=$empTSModel->getMonthTimesheetData($emp_id, $currentYear,$currentMonth);
+	$admin_worktot = sapp_Global::calcTotalWorkingHrs1($monthInfo, $currentMonth);
 ?>
 <input type="hidden" id="timesheetView" name="timesheetView" value="month" />
 <input type="hidden" id="selYrMon" value="<?php echo $selYrMon;?>"/>
@@ -160,8 +171,8 @@ if(strlen($empMinsPart.'') == 1) $empMinsPart = '0'.$empMinsPart;?>
 			
 			<div class="total_hrs_display total_hrs-50">
 	Total Hours -
-	<?php  //echo $this->empTotalHrs;?>
-	<?php  echo $empHrsPart.':'.$empMinsPart;?>
+	<?php echo $admin_worktot ;?>
+	<?php  //echo $empHrsPart.':'.$empMinsPart;?>
 </div></th>
           </tr>
           <tr class="week_names">

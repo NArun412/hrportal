@@ -1,5 +1,5 @@
 <?php
-	include_once("application/modules/default/library/sapp/Global.php");
+   include_once("application/modules/default/library/sapp/Global.php");
 	$now = new DateTime();	
 	$today = $now->format('Y-m-d');
 	$last_day_of_current_month = strtotime(date("Y-m-d", strtotime($today)));
@@ -11,16 +11,16 @@
 	
 	$selYrMon = $this->selYrMon;
 	
-	$currentMonth  = $selYrMon;
-	$approvedAlert  = $this->approvedAlert;
+	$currentMonth  = $selYrMon; //2024-05
+    $approvedAlert  = $this->approvedAlert;
 	
 	$cronStartDay = $this->cronStartDay;
 	$cronEndDay = $this->cronEndDay;
 	
 	$storage = new Zend_Auth_Storage_Session();
 	$data = $storage->read();
-	$empId = $data->id;
-?>
+	$empId = $data->id; //6
+	?>
 
 <script type="text/javascript">
  
@@ -340,7 +340,8 @@
         $lastday = date("t", mktime(0, 0, 0, $selectedYrMon[1], 1, $selectedYrMon[0])); 
 		$noOfweeks = 1 + ceil(($lastday-7+$firstday)/7);
 		$empMonthTSData  = $this->empMonthTSData;
-		$totalHrs = sapp_Global::calcTotalHrs($empMonthTSData, $currentMonth); // To send Global file pass param
+        $total_workinghrs=sapp_Global::calcTotalWorkingHrs();
+	    $totalHrs = sapp_Global::calcTotalHrs($empMonthTSData, $currentMonth); // To send Global file pass param
 ?>
 
 
@@ -371,7 +372,7 @@
             <?php 
    		  	if(Zend_Registry::get( 'tm_role' ) !='Admin') {     
  	    	?>
-           <div class="total_hrs_display total_hrs-50">Total Hours Planned- <?php echo $totalHrs;?></div>
+           <div class="total_hrs_display total_hrs-50">Total Hours - <?php echo $total_workinghrs ;?></div>
            <?php } ?>
            </th>
           </tr>
@@ -456,7 +457,7 @@
           		'submitted'=>'For Approval','enabled'=>'Enabled','rejected'=>'Rejected','blocked'=>'Blocked');
           	
           	$dayCounter = 1;
-          
+          	$totalHrForDis=0;
           	for($i = 1; $i <= $noOfweeks; $i++) {
           		$weekData = ""; 
           	//	if(array_key_exists($i-1, $empMonthTSData))
@@ -496,8 +497,9 @@
           		
           			if($dayName == $day)  {
           				
-          				$duration = ($weekData != "")?$weekData[strtolower($dayName).'_duration']:"00:00";
-          				$status = ($weekData != "")?$weekData[strtolower($dayName).'_status']:'no_entry'; 
+          				$duration = ($weekData != "")?$weekData[strtolower($dayName).'_duration']:"00:00"; // Duration 
+						$totalHrForDis=$totalHrForDis+(int)$duration;
+						$status = ($weekData != "")?$weekData[strtolower($dayName).'_status']:'no_entry'; 
           				$rejectNote = ($weekData != "")?$weekData[strtolower($dayName).'_reject_note']:"";            				
           				$calDate = $selectedYrMon[0].'-'.$selectedYrMon[1].'-'.$dayCounter;
           				//$holiday = (in_array($calDate,$holidayDates))?"H":"";
@@ -644,7 +646,7 @@
           		}
           	?>
           			</tr>
-          	<?php
+          	<?php			
           	}
           ?>
         

@@ -2940,9 +2940,9 @@ protected function _getAcl()
 	
     public static function calcTotalHrs($empMonthTSData,$currentMonth)
     {
-       $selectedYrMon = explode('-', $currentMonth);
-		$lastday = date("t", mktime(0, 0, 0, $selectedYrMon[1], 1, $selectedYrMon[0])); 
-	    $total = "";
+	   $selectedYrMon = explode('-', $currentMonth); // Current Month=2024-05
+	   $lastday = date("t", mktime(0, 0, 0, $selectedYrMon[1], 1, $selectedYrMon[0])); 
+       $total = "";
 	   $totalHrs = "00:00";
 	   foreach($empMonthTSData as $data) {
         $duration = explode(':',$data['week_duration']);
@@ -2955,54 +2955,94 @@ protected function _getAcl()
 		  if(strlen($hrs.'') == 1) $hrs = '0'.$hrs;
 		  if(strlen($mins.'') == 1) $mins = '0'.$mins;
 			$totalHrs = $hrs.':'.$mins;
+			
 	  } 
-	  $curdate = $curDate; // Assuming $curDate is defined
-	  $dateParts = explode("-", $curdate);
-	  $month = $dateParts[1];
-  	  $currentMonth; 
-	  $selectedYrMon = explode('-', $currentMonth);
-	  $currentmonth_check = $currentMonth;
-	  $dateParts_check = explode("-", $currentmonth_check);
-	  $month_check = $dateParts_check[1];
-      $year = $selectedYrMon[0];
-	  $month = $selectedYrMon[1]; //05
-      $daysInMonth = cal_days_in_month(CAL_GREGORIAN, $month, $year);
-      $saturdayCount = 0;
-	  $sundayCount = 0;
-      for ($day = 1; $day <= $daysInMonth; $day++) {
-		  $dayOfWeek = date('w', mktime(0, 0, 0, $month, $day, $year));
-  			if ($dayOfWeek == 0) { // Sunday
-			  $sundayCount++;
-		  } elseif ($dayOfWeek == 6) { // Saturday
-			  $saturdayCount++;
-		  }
-	  }
-      $except_totalhrs = $saturdayCount + $sundayCount;
-	  $except_totalhrstotal = $except_totalhrs * 8;
-	  if($lastday == '31')
-	  {
-	  $totalHrs = $totalHrs+8;
-	  }
-	  else{
-	  $totalHrs = $totalHrs;
-	  }
-	  $totalHrs = $totalHrs - $except_totalhrstotal; // 184 hrs
-      if($totalHrs > 0)
-	  {  
-		$totalHrs=$totalHrs;
-	  }
-	  else{
-		  $totalHrs = 0;
-	  }
-		return $totalHrs;
+     $startDate = date('Y-m-01', strtotime($currentMonth)); //2024-05-01
+     $endDate = date('Y-m-t', strtotime($currentMonth)); //2024-05-31
+     $totalHrs;
+	 return $totalHrs;
 	}
-public static function totalapprovedhrs($total_approvedhrs, $rejected_hrs,$status)
+   public static function totalapprovedhrs($total_approvedhrs, $rejected_hrs,$status)
   {
 	 $final_approvedhrs = $total_approvedhrs;
 	 $final_rejectedhrs = $rejected_hrs;
 	 return $status;
 	}
-	public static function format4($id='',$i=0,$url='')
+	/********************************Total Working Hours Beginup***************************** */
+
+
+	public static function calcTotalWorkingHrs1($monthInfo, $month)
+    {
+		$dayList=array('sun_','mon_','tue_','wed_','thu_','fri_','sat_');
+		$totlHrs=0;
+		foreach ($monthInfo as $weekInfo) {
+			foreach($dayList as $dayInfo)
+			{
+				$time=strtotime($weekInfo[$dayInfo.'date']);
+				$mnt=date("m",$time);
+				if($mnt == $month || $mnt == "0".$month){
+					$totlHrs=$totlHrs+(int)$weekInfo[$dayInfo.'duration'];
+				}
+			 }      
+		}
+		return $totlHrs;
+	}
+    public static function calcTotalWorkingHrs()
+    {
+		$now = new DateTime();  
+		$storage = new Zend_Auth_Storage_Session();
+		$empTSModel = new Timemanagement_Model_MyTimesheet();
+		$data = $storage->read();
+        $currentYear = $now->format('Y');
+        $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://';
+        $host = $_SERVER['HTTP_HOST']; //localhost
+        $path = $_SERVER['REQUEST_URI'];
+        $checkpath = $path; // Check Current URL PATH DATE found or not
+        $path_segments = explode('/', parse_url($checkpath, PHP_URL_PATH));
+        $third_segment = $path_segments[3];
+        $pattern = '/^\d{4}-\d{2}$/';
+       if(preg_match($pattern, $third_segment)) {
+        $full_url = $protocol . $host.$path;
+	    $url = $full_url;
+        } else {
+	   $full_url = $protocol . $host;
+	   $url = $full_url;
+       }
+        $parsed_url = parse_url($url);
+        $path = $parsed_url['path'];
+        $path_parts = explode("/", $path);
+        $year_month = $path_parts[3]; 
+		
+	    $year_month_parts = explode("-", $year_month);
+        $year = $year_month_parts[0];  // 2024
+		  if($year_month == '')
+            {
+			   $currentMonth = $now->format('m');
+			   $month = $currentMonth; // 05
+            }
+            else
+            {
+			   $month = $year_month_parts[1]; // 05
+               $currentMonth = $month;
+            }
+       $monthInfo=$empTSModel->getMonthTimesheetData($data->id, $currentYear,$currentMonth);
+       $dayList=array('sun_','mon_','tue_','wed_','thu_','fri_','sat_');
+       $totlHrs=0;
+       foreach ($monthInfo as $weekInfo) {
+        foreach($dayList as $dayInfo)
+        {
+            $time=strtotime($weekInfo[$dayInfo.'date']);
+            $mnt=date("m",$time);
+            if($mnt == $month){
+                $totlHrs=$totlHrs+(int)$weekInfo[$dayInfo.'duration'];
+            }
+         }      
+        }
+        return $totlHrs;
+    }  
+		
+/***************************END************************************************* */
+public static function format4($id='',$i=0,$url='')
 	{
         $now = new DateTime();	
 		$today = $now->format('Y-m-d');
@@ -3020,6 +3060,7 @@ public static function totalapprovedhrs($total_approvedhrs, $rejected_hrs,$statu
 		$btnText = self::titleArr($id,'btnText');
 		$count = 0;
 		$totalHrs = self::calcTotalHrs($empMonthTSData, $currentYear."-".$currentMonth);
+        $tot = self::calcTotalWorkingHrs();
 		/*******************Approved Code Begin up************ */
 		$selectedYrMon = explode('-', $currentMonth);
         $selMonName = date('F', mktime(0, 0, 0, $selectedYrMon[1], 1,$selectedYrMon[0]));      	
@@ -3186,7 +3227,7 @@ public static function totalapprovedhrs($total_approvedhrs, $rejected_hrs,$statu
 				<?php
 				}  // end
 			
-		/*******************Approved Code End up************ */
+		/*******************Approved Code End up************ */		
 		if(!empty($url))
 		{
 		 $url = substr($url,1);
@@ -3231,7 +3272,7 @@ public static function totalapprovedhrs($total_approvedhrs, $rejected_hrs,$statu
 		   }
            $htmlContent = '<div class="dashboard_wid_box '.$class.' colour_'.$i.' emp_total">
 						<h4 >
-						<div class="box_count_tol emp_total">'.($id==211 ? $totalHrs :  $count) .'</div>'.$title.'</h4>';
+						<div class="box_count_tol emp_total">'.($id==211 ? $tot :  $count) .'</div>'.$title.'</h4>';
 		   	if(!empty($format4))
 			{		
 				// Avoid hand symbol for Employee widget tabs
