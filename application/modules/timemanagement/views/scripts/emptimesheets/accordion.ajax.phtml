@@ -64,7 +64,8 @@ if('<?php echo $this->page;?>'==1 && '<?php echo sizeof($emplist); ?>' == '0')
 				<label>Total Hrs</label> 
 				<?php
 				$empids=$tmpEmp['emp_id'];
-  				$monthInfo=$empTSModel->getMonthTimesheetData($empids, $currentYear,$currentMonth);
+  				$monthInfo3=$empTSModel->getMonthTimesheetData($empids, $currentYear,$currentMonth);
+				$monthInfo=array_slice($monthInfo3,0,5);
 				$admin_worktot = sapp_Global::calcTotalWorkingHrs1($monthInfo, $currentMonth);
 				?>
 				<?php $tmpEmp['emp_id'];?>

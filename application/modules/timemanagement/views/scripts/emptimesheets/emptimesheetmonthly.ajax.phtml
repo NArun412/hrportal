@@ -51,7 +51,8 @@
 	$data = $storage->read();
 	$currentYear = $now->format('Y');
 	$currentMonth = $now->format('m');
-    $monthInfo=$empTSModel->getMonthTimesheetData($emp_id, $currentYear,$currentMonth);
+    $monthInfo2=$empTSModel->getMonthTimesheetData($emp_id, $currentYear,$currentMonth);
+	$monthInfo=array_slice($monthInfo2,0,5);
 	$admin_worktot = sapp_Global::calcTotalWorkingHrs1($monthInfo, $currentMonth);
 ?>
 <input type="hidden" id="timesheetView" name="timesheetView" value="month" />

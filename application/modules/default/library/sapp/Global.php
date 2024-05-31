@@ -2791,7 +2791,7 @@ protected function _getAcl()
       172  => array('title'=>'Feedforward Employee Status','btnText'=>'View','emptyText'=>'No data','addText'=>''),
       174  => array('title'=>'My Team Appraisal','btnText'=>'View','emptyText'=>'No data','addText'=>''),
 	  182  => array('title'=>'Categories','btnText'=>'View','emptyText'=>'No data','addText'=>''),
-	  211  => array('title'=>'Time Management','btnText'=>'View My Time','emptyText'=>'No data','addText'=>''),
+	  211  => array('title'=>'Total Hours Submitted','btnText'=>'View My Time','emptyText'=>'No data','addText'=>''),
       );
       //echo "<pre>";print_r($idsTitleArr[140]['empTabTitle']);exit;
 	return $idsTitleArr[$id][$con];
@@ -3025,18 +3025,41 @@ protected function _getAcl()
 			   $month = $year_month_parts[1]; // 05
                $currentMonth = $month;
             }
-       $monthInfo=$empTSModel->getMonthTimesheetData($data->id, $currentYear,$currentMonth);
-       $dayList=array('sun_','mon_','tue_','wed_','thu_','fri_','sat_');
+	   $monthInfo1=$empTSModel->getMonthTimesheetData($data->id, $currentYear,$currentMonth);
+	   $monthInfo=array_slice($monthInfo1,0,5);
+	   $dayList=array('sun_','mon_','tue_','wed_','thu_','fri_','sat_');
        $totlHrs=0;
+	   $totlHrs_final=array();
        foreach ($monthInfo as $weekInfo) {
-        foreach($dayList as $dayInfo)
-        {
-            $time=strtotime($weekInfo[$dayInfo.'date']);
-            $mnt=date("m",$time);
-            if($mnt == $month){
-                $totlHrs=$totlHrs+(int)$weekInfo[$dayInfo.'duration'];
-            }
-         }      
+		$dates = [
+			$weekInfo['sun_date'],
+			$weekInfo['mon_date'],
+			$weekInfo['tue_date'],
+			$weekInfo['wed_date'],
+			$weekInfo['thu_date'],
+			$weekInfo['fri_date'],
+			$weekInfo['sat_date']
+		];
+
+	    $duration=[
+           $weekInfo['sun_duration'],
+			$weekInfo['mon_duration'],
+			$weekInfo['tue_duration'],
+			$weekInfo['wed_duration'],
+			$weekInfo['thu_duration'],
+			$weekInfo['fri_duration'],
+			$weekInfo['sat_duration']
+		];
+
+		$datesCount = count($dates);
+	    for ($i = 0; $i <=$datesCount; $i++) {
+                  $n=$i;
+					$date = $dates[$i];
+					$month = date('m', strtotime($date));
+					if ($month == $currentMonth) {
+						$totlHrs +=$duration[$n];  
+                         }
+				}
         }
         return $totlHrs;
     }  
@@ -3296,14 +3319,7 @@ public static function format4($id='',$i=0,$url='')
 					else{
 						$check_approved_count=0;
 					}
-					if($total_rejectedhrs != '')
-					{
-						$final_rejectedhrs=$total_rejectedhrs;
-					}
-					else
-					{
-						$final_rejectedhrs=0;
-					}
+					$final_rejectedhrs=$tot-$check_approved_count;
 					$htmlContent .='<a '.$href1.' class ="cls_redirect"><div class="dashboard_wid_box_inner">'.$title3.'<span class="box_count">'.$check_approved_count.'</span></div></a>
 						<a '.$href2.' class ="cls_redirect"><div class="dashboard_wid_box_inner last-child">'.$title4.'<span class="box_count">'.$final_rejectedhrs.'</span></div></a>';
 				}
