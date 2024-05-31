@@ -3544,6 +3544,7 @@ h4.dashbord_title{ font-size:16px; color:#4b4b4b; font-family: 'Roboto Medium'; 
 .view_more_annou, .announcements_link a{ color:#208bbd; font-size:13px; font-family: 'Roboto Regular'; float:right; text-decoration:none;}
 .announcements_link a{ float:none;}
 .company_announc h4.dashbord_title{ border-bottom:1px solid #208bbd; padding-bottom:10px;}
+.description_size {font-size: 15px;line-height: 25px;word-spacing: 7px;}
 .qstnscrldiv{clear: both; max-height: 450px;}
 .qstnscrldiv-new{clear: both;}
 .per_steps .ui-state-default .ui-icon.ui-icon-triangle-1-e{ background:url(../images/to_open.png) center no-repeat;     left: auto;     position: absolute;    right: 22px;}
